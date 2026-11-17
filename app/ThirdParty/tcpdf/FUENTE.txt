@@ -1,0 +1,5 @@
+TCPDF 6.11.3, LGPL-3.0-or-later.
+https://codeload.github.com/tecnickcom/TCPDF/zip/refs/tags/6.11.3
+SHA256 del archivo original: 65f9ab071d0bfc4d3796c399a7d43a6f2e4f982d50c15d204b0b5fedca36504e
+Se incluyen el motor, las fuentes DejaVu Sans y los archivos de licencia necesarios.
+Uso limitado a contenido local y escapado.

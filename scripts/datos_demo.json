@@ -1,0 +1,1786 @@
+{
+  "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada.",
+  "precios": "Importes ficticios en MXN para pruebas; no son tarifas recomendadas.",
+  "fuentes_informativas": [
+    "https://www.mayocliniclabs.com/test-catalog/Overview/42120",
+    "https://prd1.mayocliniclabs.com/test-catalog/Overview/800096"
+  ],
+  "catalogos": {
+    "tipos_muestra": [
+      {
+        "codigo": "DEMO-SUE",
+        "nombre": "Suero (Demo)",
+        "recipiente": "Por definir por el laboratorio",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Confirmar recolección y conservación con el responsable."
+      },
+      {
+        "codigo": "DEMO-EDTA",
+        "nombre": "Sangre total con EDTA (Demo)",
+        "recipiente": "Tubo con EDTA; especificación por validar",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Confirmar recolección y conservación con el responsable."
+      },
+      {
+        "codigo": "DEMO-ORI",
+        "nombre": "Orina (Demo)",
+        "recipiente": "Recipiente por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Confirmar recolección y conservación con el responsable."
+      },
+      {
+        "codigo": "DEMO-HEC",
+        "nombre": "Heces (Demo)",
+        "recipiente": "Recipiente por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Confirmar recolección y conservación con el responsable."
+      },
+      {
+        "codigo": "DEMO-CIT",
+        "nombre": "Plasma citratado (Demo)",
+        "recipiente": "Tubo con citrato; especificación por validar",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Confirmar recolección y conservación con el responsable."
+      },
+      {
+        "codigo": "DEMO-HIS",
+        "nombre": "Hisopado (Demo)",
+        "recipiente": "Dispositivo por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Confirmar recolección y conservación con el responsable."
+      }
+    ],
+    "metodos": [
+      {
+        "codigo": "DEMO-PEND",
+        "nombre": "Pendiente de configurar (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      },
+      {
+        "codigo": "DEMO-ENZ",
+        "nombre": "Enzimático (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      },
+      {
+        "codigo": "DEMO-COL",
+        "nombre": "Colorimétrico (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      },
+      {
+        "codigo": "DEMO-ISE",
+        "nombre": "Electrodo selectivo de iones (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      },
+      {
+        "codigo": "DEMO-IMM",
+        "nombre": "Inmunoensayo (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      },
+      {
+        "codigo": "DEMO-MIC",
+        "nombre": "Microscopía (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      },
+      {
+        "codigo": "DEMO-HEM",
+        "nombre": "Analizador hematológico (Demo)",
+        "descripcion": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Seleccionar y validar según el equipo y los reactivos del laboratorio."
+      }
+    ],
+    "companias": [
+      {
+        "codigo": "DEMO-C01",
+        "nombre": "Compañía Norte (Demo)",
+        "razon_social": "Empresa ficticia de demostración",
+        "contacto": "Contacto Demo 1",
+        "correo": "contacto1@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada."
+      },
+      {
+        "codigo": "DEMO-C02",
+        "nombre": "Compañía Centro (Demo)",
+        "razon_social": "Empresa ficticia de demostración",
+        "contacto": "Contacto Demo 2",
+        "correo": "contacto2@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada."
+      },
+      {
+        "codigo": "DEMO-C03",
+        "nombre": "Compañía Sur (Demo)",
+        "razon_social": "Empresa ficticia de demostración",
+        "contacto": "Contacto Demo 3",
+        "correo": "contacto3@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada."
+      }
+    ],
+    "medicos": [
+      {
+        "codigo": "DEMO-M01",
+        "nombre": "Médico Demo 01",
+        "apellidos": "Pruebas",
+        "especialidad": "Especialidad por configurar",
+        "correo": "medico1@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia, sin cédula profesional real."
+      },
+      {
+        "codigo": "DEMO-M02",
+        "nombre": "Médico Demo 02",
+        "apellidos": "Pruebas",
+        "especialidad": "Especialidad por configurar",
+        "correo": "medico2@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia, sin cédula profesional real."
+      },
+      {
+        "codigo": "DEMO-M03",
+        "nombre": "Médico Demo 03",
+        "apellidos": "Pruebas",
+        "especialidad": "Especialidad por configurar",
+        "correo": "medico3@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia, sin cédula profesional real."
+      },
+      {
+        "codigo": "DEMO-M04",
+        "nombre": "Médico Demo 04",
+        "apellidos": "Pruebas",
+        "especialidad": "Especialidad por configurar",
+        "correo": "medico4@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia, sin cédula profesional real."
+      },
+      {
+        "codigo": "DEMO-M05",
+        "nombre": "Médico Demo 05",
+        "apellidos": "Pruebas",
+        "especialidad": "Especialidad por configurar",
+        "correo": "medico5@example.test",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia, sin cédula profesional real."
+      }
+    ],
+    "analitos": [
+      {
+        "codigo": "DEMO-GLU",
+        "nombre": "Glucosa (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-URE",
+        "nombre": "Urea (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-CRE",
+        "nombre": "Creatinina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-AU",
+        "nombre": "Ácido úrico (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-COL",
+        "nombre": "Colesterol total (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-TRI",
+        "nombre": "Triglicéridos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-HDL",
+        "nombre": "Colesterol HDL (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-LDL",
+        "nombre": "Colesterol LDL (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-ALT",
+        "nombre": "Alanina aminotransferasa (ALT) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-AST",
+        "nombre": "Aspartato aminotransferasa (AST) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-FAL",
+        "nombre": "Fosfatasa alcalina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-GGT",
+        "nombre": "Gamma glutamiltransferasa (GGT) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-BT",
+        "nombre": "Bilirrubina total (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-BD",
+        "nombre": "Bilirrubina directa (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-BI",
+        "nombre": "Bilirrubina indirecta (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-ALB",
+        "nombre": "Albúmina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-PT",
+        "nombre": "Proteínas totales (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-CA",
+        "nombre": "Calcio (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-MG",
+        "nombre": "Magnesio (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-P",
+        "nombre": "Fósforo (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-NA",
+        "nombre": "Sodio (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-K",
+        "nombre": "Potasio (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-CL",
+        "nombre": "Cloruro (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-TSH",
+        "nombre": "Hormona estimulante de tiroides (TSH) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-T4L",
+        "nombre": "Tiroxina libre (T4 libre) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-A1C",
+        "nombre": "Hemoglobina glucosilada (HbA1c) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-HCG",
+        "nombre": "Gonadotropina coriónica humana (hCG) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-PSA",
+        "nombre": "Antígeno prostático específico (PSA) (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-PCR",
+        "nombre": "Proteína C reactiva (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-FE",
+        "nombre": "Hierro (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-LEU",
+        "nombre": "Leucocitos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-ERI",
+        "nombre": "Eritrocitos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-HB",
+        "nombre": "Hemoglobina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-HTO",
+        "nombre": "Hematocrito (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-VCM",
+        "nombre": "Volumen corpuscular medio (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-HCM",
+        "nombre": "Hemoglobina corpuscular media (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-CHCM",
+        "nombre": "Concentración de hemoglobina corpuscular media (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-RDW",
+        "nombre": "Amplitud de distribución eritrocitaria (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-PLQ",
+        "nombre": "Plaquetas (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-NEU",
+        "nombre": "Neutrófilos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-LIN",
+        "nombre": "Linfocitos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-MON",
+        "nombre": "Monocitos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-EOS",
+        "nombre": "Eosinófilos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-BAS",
+        "nombre": "Basófilos (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Unidad y decimales por validar; sin rangos de referencia precargados."
+      },
+      {
+        "codigo": "DEMO-U-COL",
+        "nombre": "Color de orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "texto",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-ASP",
+        "nombre": "Aspecto de orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "texto",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-DEN",
+        "nombre": "Densidad urinaria (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-PH",
+        "nombre": "pH urinario (Demo)",
+        "unidad": "",
+        "tipo_resultado": "numerico",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-PRO",
+        "nombre": "Proteínas en orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "cualitativo",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-GLU",
+        "nombre": "Glucosa en orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "cualitativo",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-CET",
+        "nombre": "Cetonas en orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "cualitativo",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-SAN",
+        "nombre": "Sangre en orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "cualitativo",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-NIT",
+        "nombre": "Nitritos en orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "cualitativo",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-U-LEU",
+        "nombre": "Leucocitos en orina (Demo)",
+        "unidad": "",
+        "tipo_resultado": "texto",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-C-MAC",
+        "nombre": "Descripción macroscópica (Demo)",
+        "unidad": "",
+        "tipo_resultado": "texto",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-C-MIC",
+        "nombre": "Descripción microscópica (Demo)",
+        "unidad": "",
+        "tipo_resultado": "texto",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      },
+      {
+        "codigo": "DEMO-C-PAR",
+        "nombre": "Observación parasitológica (Demo)",
+        "unidad": "",
+        "tipo_resultado": "texto",
+        "decimales": 2,
+        "_metodo_codigo": "DEMO-PEND",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Parámetro ilustrativo; definir formato y criterios antes de uso clínico."
+      }
+    ],
+    "estudios": [
+      {
+        "codigo": "DEMO-E-GLU",
+        "nombre": "Glucosa (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-GLU"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-URE",
+        "nombre": "Urea (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-URE"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-CRE",
+        "nombre": "Creatinina (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-CRE"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-AU",
+        "nombre": "Ácido úrico (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-AU"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-COL",
+        "nombre": "Colesterol total (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-COL"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-TRI",
+        "nombre": "Triglicéridos (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-TRI"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-LIP",
+        "nombre": "Perfil de lípidos (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-COL",
+          "DEMO-TRI",
+          "DEMO-HDL",
+          "DEMO-LDL"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-ALT",
+        "nombre": "ALT (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-ALT"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-AST",
+        "nombre": "AST (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-AST"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-HEP",
+        "nombre": "Perfil hepático (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-ALT",
+          "DEMO-AST",
+          "DEMO-FAL",
+          "DEMO-GGT",
+          "DEMO-BT",
+          "DEMO-BD",
+          "DEMO-BI",
+          "DEMO-ALB",
+          "DEMO-PT"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-ELE",
+        "nombre": "Electrolitos (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-NA",
+          "DEMO-K",
+          "DEMO-CL"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-CA",
+        "nombre": "Calcio (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-CA"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-MG",
+        "nombre": "Magnesio (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-MG"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-P",
+        "nombre": "Fósforo (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-P"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-TSH",
+        "nombre": "TSH (Demo)",
+        "area": "Hormonas",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-TSH"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-T4L",
+        "nombre": "T4 libre (Demo)",
+        "area": "Hormonas",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-T4L"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-TIR",
+        "nombre": "Perfil tiroideo de ejemplo (Demo)",
+        "area": "Hormonas",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-TSH",
+          "DEMO-T4L"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-A1C",
+        "nombre": "Hemoglobina glucosilada (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-EDTA",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-A1C"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-HCG",
+        "nombre": "hCG cuantitativa (Demo)",
+        "area": "Hormonas",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-HCG"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-PSA",
+        "nombre": "PSA total (Demo)",
+        "area": "Inmunología",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-PSA"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-PCR",
+        "nombre": "Proteína C reactiva (Demo)",
+        "area": "Inmunología",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-PCR"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-FE",
+        "nombre": "Hierro sérico (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-FE"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-BH",
+        "nombre": "Biometría hemática (Demo)",
+        "area": "Hematología",
+        "_muestra_codigo": "DEMO-EDTA",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-LEU",
+          "DEMO-ERI",
+          "DEMO-HB",
+          "DEMO-HTO",
+          "DEMO-VCM",
+          "DEMO-HCM",
+          "DEMO-CHCM",
+          "DEMO-RDW",
+          "DEMO-PLQ",
+          "DEMO-NEU",
+          "DEMO-LIN",
+          "DEMO-MON",
+          "DEMO-EOS",
+          "DEMO-BAS"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-EGO",
+        "nombre": "Examen general de orina (Demo)",
+        "area": "Uroanálisis",
+        "_muestra_codigo": "DEMO-ORI",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-U-COL",
+          "DEMO-U-ASP",
+          "DEMO-U-DEN",
+          "DEMO-U-PH",
+          "DEMO-U-PRO",
+          "DEMO-U-GLU",
+          "DEMO-U-CET",
+          "DEMO-U-SAN",
+          "DEMO-U-NIT",
+          "DEMO-U-LEU"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-COP",
+        "nombre": "Coproparasitoscópico de ejemplo (Demo)",
+        "area": "Parasitología",
+        "_muestra_codigo": "DEMO-HEC",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-C-MAC",
+          "DEMO-C-MIC",
+          "DEMO-C-PAR"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-REN",
+        "nombre": "Perfil renal de ejemplo (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-URE",
+          "DEMO-CRE",
+          "DEMO-AU"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-PT",
+        "nombre": "Proteínas totales (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-PT"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-ALB",
+        "nombre": "Albúmina (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-ALB"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-BIL",
+        "nombre": "Bilirrubinas (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-BT",
+          "DEMO-BD",
+          "DEMO-BI"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      },
+      {
+        "codigo": "DEMO-E-GGT",
+        "nombre": "GGT (Demo)",
+        "area": "Química clínica",
+        "_muestra_codigo": "DEMO-SUE",
+        "_metodo_codigo": "DEMO-PEND",
+        "_analito_codigos": [
+          "DEMO-GGT"
+        ],
+        "tiempo_entrega": "Por definir",
+        "indicaciones": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Composición, muestra, método y preparación por validar por el responsable."
+      }
+    ],
+    "pacientes": [
+      {
+        "codigo": "DEMO-P001",
+        "nombre": "Paciente Demo 01",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1981-05-15",
+        "sexo": "femenino",
+        "correo": "paciente1@example.test",
+        "_medico_codigo": "DEMO-M01",
+        "_compania_codigo": "DEMO-C01",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P002",
+        "nombre": "Paciente Demo 02",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1982-05-15",
+        "sexo": "masculino",
+        "correo": "paciente2@example.test",
+        "_medico_codigo": "DEMO-M02",
+        "_compania_codigo": "DEMO-C02",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P003",
+        "nombre": "Paciente Demo 03",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1983-05-15",
+        "sexo": "no_especificado",
+        "correo": "paciente3@example.test",
+        "_medico_codigo": "DEMO-M03",
+        "_compania_codigo": "DEMO-C03",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P004",
+        "nombre": "Paciente Demo 04",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1984-05-15",
+        "sexo": "femenino",
+        "correo": "paciente4@example.test",
+        "_medico_codigo": "DEMO-M04",
+        "_compania_codigo": "DEMO-C01",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P005",
+        "nombre": "Paciente Demo 05",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1985-05-15",
+        "sexo": "masculino",
+        "correo": "paciente5@example.test",
+        "_medico_codigo": "DEMO-M05",
+        "_compania_codigo": "DEMO-C02",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P006",
+        "nombre": "Paciente Demo 06",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1986-05-15",
+        "sexo": "no_especificado",
+        "correo": "paciente6@example.test",
+        "_medico_codigo": "DEMO-M01",
+        "_compania_codigo": "DEMO-C03",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P007",
+        "nombre": "Paciente Demo 07",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1987-05-15",
+        "sexo": "femenino",
+        "correo": "paciente7@example.test",
+        "_medico_codigo": "DEMO-M02",
+        "_compania_codigo": "DEMO-C01",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P008",
+        "nombre": "Paciente Demo 08",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1988-05-15",
+        "sexo": "masculino",
+        "correo": "paciente8@example.test",
+        "_medico_codigo": "DEMO-M03",
+        "_compania_codigo": "DEMO-C02",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P009",
+        "nombre": "Paciente Demo 09",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1989-05-15",
+        "sexo": "no_especificado",
+        "correo": "paciente9@example.test",
+        "_medico_codigo": "DEMO-M04",
+        "_compania_codigo": "DEMO-C03",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      },
+      {
+        "codigo": "DEMO-P010",
+        "nombre": "Paciente Demo 10",
+        "apellidos": "Pruebas",
+        "fecha_nacimiento": "1990-05-15",
+        "sexo": "femenino",
+        "correo": "paciente10@example.test",
+        "_medico_codigo": "DEMO-M05",
+        "_compania_codigo": "DEMO-C01",
+        "notas": "Datos de demostración para probar el sistema. No representan configuración clínica validada. Persona ficticia. No usar como expediente de una persona real."
+      }
+    ],
+    "precios": [
+      {
+        "_estudio_codigo": "DEMO-E-GLU",
+        "_compania_codigo": null,
+        "importe": "90.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GLU",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "81.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GLU",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "76.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GLU",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "72.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-URE",
+        "_compania_codigo": null,
+        "importe": "100.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-URE",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "90.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-URE",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "85.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-URE",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "80.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CRE",
+        "_compania_codigo": null,
+        "importe": "100.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CRE",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "90.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CRE",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "85.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CRE",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "80.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AU",
+        "_compania_codigo": null,
+        "importe": "100.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AU",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "90.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AU",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "85.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AU",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "80.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COL",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COL",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COL",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COL",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TRI",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TRI",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TRI",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TRI",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-LIP",
+        "_compania_codigo": null,
+        "importe": "350.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-LIP",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "315.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-LIP",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "297.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-LIP",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "280.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALT",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALT",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALT",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALT",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AST",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AST",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AST",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-AST",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HEP",
+        "_compania_codigo": null,
+        "importe": "480.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HEP",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "432.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HEP",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "408.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HEP",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "384.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ELE",
+        "_compania_codigo": null,
+        "importe": "250.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ELE",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "225.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ELE",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "212.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ELE",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "200.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CA",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CA",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CA",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-CA",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-MG",
+        "_compania_codigo": null,
+        "importe": "150.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-MG",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "135.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-MG",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "127.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-MG",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "120.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-P",
+        "_compania_codigo": null,
+        "importe": "120.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-P",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "108.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-P",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "102.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-P",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "96.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TSH",
+        "_compania_codigo": null,
+        "importe": "230.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TSH",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "207.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TSH",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "195.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TSH",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "184.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-T4L",
+        "_compania_codigo": null,
+        "importe": "230.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-T4L",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "207.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-T4L",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "195.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-T4L",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "184.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TIR",
+        "_compania_codigo": null,
+        "importe": "420.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TIR",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "378.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TIR",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "357.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-TIR",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "336.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-A1C",
+        "_compania_codigo": null,
+        "importe": "260.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-A1C",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "234.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-A1C",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "221.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-A1C",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "208.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HCG",
+        "_compania_codigo": null,
+        "importe": "250.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HCG",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "225.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HCG",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "212.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-HCG",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "200.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PSA",
+        "_compania_codigo": null,
+        "importe": "290.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PSA",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "261.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PSA",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "246.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PSA",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "232.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PCR",
+        "_compania_codigo": null,
+        "importe": "190.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PCR",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "171.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PCR",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "161.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PCR",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "152.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-FE",
+        "_compania_codigo": null,
+        "importe": "160.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-FE",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "144.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-FE",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "136.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-FE",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "128.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BH",
+        "_compania_codigo": null,
+        "importe": "220.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BH",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "198.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BH",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "187.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BH",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "176.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-EGO",
+        "_compania_codigo": null,
+        "importe": "120.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-EGO",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "108.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-EGO",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "102.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-EGO",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "96.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COP",
+        "_compania_codigo": null,
+        "importe": "150.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COP",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "135.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COP",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "127.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-COP",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "120.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-REN",
+        "_compania_codigo": null,
+        "importe": "260.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-REN",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "234.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-REN",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "221.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-REN",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "208.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PT",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PT",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PT",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-PT",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALB",
+        "_compania_codigo": null,
+        "importe": "110.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALB",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "99.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALB",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "93.50"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-ALB",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "88.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BIL",
+        "_compania_codigo": null,
+        "importe": "200.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BIL",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "180.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BIL",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "170.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-BIL",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "160.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GGT",
+        "_compania_codigo": null,
+        "importe": "140.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GGT",
+        "_compania_codigo": "DEMO-C01",
+        "importe": "126.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GGT",
+        "_compania_codigo": "DEMO-C02",
+        "importe": "119.00"
+      },
+      {
+        "_estudio_codigo": "DEMO-E-GGT",
+        "_compania_codigo": "DEMO-C03",
+        "importe": "112.00"
+      }
+    ]
+  }
+}
