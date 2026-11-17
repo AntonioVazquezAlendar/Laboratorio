@@ -15,7 +15,8 @@ class Rol
             'ver_ordenes'=>'Consultar órdenes', 'crear_ordenes'=>'Registrar órdenes',
             'editar_solicitudes'=>'Editar solicitudes','cotizar'=>'Crear cotizaciones','imprimir_solicitudes'=>'Imprimir comprobantes y órdenes de trabajo',
             'registrar_ingresos'=>'Registrar ingresos de caja','registrar_egresos'=>'Registrar egresos de caja','cerrar_caja'=>'Realizar corte de caja',
-            'cobrar'=>'Registrar cobros', 'operar_caja'=>'Operar caja',
+            'ver_cobros'=>'Consultar saldos, pagos y recibos de solicitudes', 'cobrar'=>'Registrar anticipos y abonos de solicitudes', 'operar_caja'=>'Operar caja',
+            'solicitar_anulaciones'=>'Solicitar cancelaciones y devoluciones', 'autorizar_anulaciones'=>'Autorizar cancelaciones y devoluciones (administrador)', 'devolver_pagos'=>'Registrar devoluciones autorizadas en caja',
             'recibir_muestras'=>'Recibir muestras', 'ver_resultados'=>'Consultar resultados',
             'capturar_resultados'=>'Capturar resultados', 'validar_resultados'=>'Validar resultados',
             'entregar_resultados'=>'Entregar resultados autorizados', 'corregir_resultados'=>'Corregir resultados con motivo'
@@ -33,12 +34,15 @@ class Rol
         foreach ($catalogo as $clave=>$etiqueta) {
             if (!array_key_exists($clave,$permisos) || !is_bool($permisos[$clave])) { throw new HttpError('Los permisos deben estar activados o desactivados.'); }
         }
-        $dependencias = array('editar_solicitudes'=>'ver_ordenes','cotizar'=>'ver_ordenes','imprimir_solicitudes'=>'ver_ordenes','registrar_ingresos'=>'operar_caja','registrar_egresos'=>'operar_caja','cerrar_caja'=>'operar_caja','editar_catalogos'=>'ver_catalogos','editar_medicos'=>'ver_medicos','editar_companias'=>'ver_companias','editar_precios'=>'ver_precios','editar_pacientes'=>'ver_pacientes','crear_ordenes'=>'ver_ordenes',
+        $dependencias = array('solicitar_anulaciones'=>'ver_cobros','autorizar_anulaciones'=>'administrar_accesos','devolver_pagos'=>'ver_cobros','cobrar'=>'ver_cobros','editar_solicitudes'=>'ver_ordenes','cotizar'=>'ver_ordenes','imprimir_solicitudes'=>'ver_ordenes','registrar_ingresos'=>'operar_caja','registrar_egresos'=>'operar_caja','cerrar_caja'=>'operar_caja','editar_catalogos'=>'ver_catalogos','editar_medicos'=>'ver_medicos','editar_companias'=>'ver_companias','editar_precios'=>'ver_precios','editar_pacientes'=>'ver_pacientes','crear_ordenes'=>'ver_ordenes',
             'capturar_resultados'=>'ver_resultados','validar_resultados'=>'ver_resultados',
             'entregar_resultados'=>'ver_resultados','corregir_resultados'=>'ver_resultados');
         foreach ($dependencias as $accion=>$consulta) {
             if ($permisos[$accion] && !$permisos[$consulta]) { throw new HttpError('Activa también: '.$catalogo[$consulta].'.'); }
         }
+        if($permisos['cobrar']&&(!$permisos['operar_caja']||!$permisos['registrar_ingresos']))throw new HttpError('Activa Operar caja y Registrar ingresos antes de permitir cobros.');
+        if($permisos['autorizar_anulaciones']&&!$permisos['ver_cobros'])throw new HttpError('Activa Consultar saldos y pagos para autorizar.');
+        if($permisos['devolver_pagos']&&(!$permisos['operar_caja']||!$permisos['registrar_egresos']))throw new HttpError('Activa Operar caja y Registrar egresos para devolver pagos.');
         $this->db->beginTransaction();
         try {
             $this->db->query('SELECT id FROM roles ORDER BY id FOR UPDATE')->fetchAll();

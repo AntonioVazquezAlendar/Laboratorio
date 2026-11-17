@@ -258,6 +258,195 @@ try:
  closed=caja.call('caja')['historial'][0];check(closed['resumen']['diferencia']=='-10.15','corte guarda diferencia firmada')
  caja.call('caja/egreso','POST',{'importe':'1.00','concepto':'Turno cerrado QA','clave':str(uuid.uuid4())},code=409)
  lab.call('caja',code=403)
+
+ # Linked collections: advance payments, installments, change and cash accounting.
+ pay_order=admin.call('solicitudes','POST',{'estado':'registrada','paciente_id':patient['id'],'estudios':[study['id']]},code=201);pid=pay_order['id']
+ before=caja.call('cobros/solicitudes/'+str(pid));check(before['resumen']['saldo']=='120.50' and before['resumen']['pagado']=='0.00','solicitud inicia con saldo total sin asumir pagos previos')
+ lab.call('cobros/solicitudes',code=403);caja.call('solicitudes/'+str(pid),code=403)
+ def paybody(context,amount,method='efectivo',key=None,**extra):
+  return dict({'version':context['version'],'turno_id':context['turno']['id'] if context['turno'] else 999999,'importe':amount,'metodo':method,'clave':key or str(uuid.uuid4())},**extra)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(before,'1.00'),code=409)
+ caja.call('caja/abrir','POST',{'fondo':'100.00'})
+ admin.call('caja/abrir','POST',{'fondo':'0.00'});foreign_turn=admin.call('caja')['turno']
+ pc=caja.call('cobros/solicitudes/'+str(pid));initial_turn_version=caja.call('caja')['turno']['version'];new_turn=pc['turno']['id']
+ caja.call('cobros/solicitudes/'+str(pid),'POST',dict(paybody(pc,'1.00'),turno_id=foreign_turn['id']),code=409)
+ recep.call('cobros/solicitudes/'+str(pid));recep.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'1.00'),code=403)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'0'),code=422)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'-1'),code=422)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'1.001'),code=422)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'121.00'),code=409)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'10.00',recibido='9.00'),code=422)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'10.00','tarjeta',recibido='10.00'),code=422)
+ quote_ctx=dict(pc);caja.call('cobros/solicitudes/'+str(quote['id']),'POST',paybody(quote_ctx,'1.00'),code=409)
+ manual_key=str(uuid.uuid4());caja.call('caja/ingreso','POST',{'importe':'7.10','concepto':'Otro ingreso QA','metodo':'efectivo','clave':manual_key})
+ advance_body=paybody(pc,'40.25',recibido='50.00',referencia='Anticipo QA')
+ advance=caja.call('cobros/solicitudes/'+str(pid),'POST',advance_body,code=201)
+ repeat=caja.call('cobros/solicitudes/'+str(pid),'POST',advance_body,code=201);check(str(repeat['id'])==str(advance['id']) and repeat['repetido'],'reintentar anticipo devuelve el mismo recibo')
+ caja.call('cobros/solicitudes/'+str(pid),'POST',dict(advance_body,importe='20.00'),code=409)
+ first_receipt=caja.call('cobros/pagos/'+str(advance['id'])+'/recibo')
+ check(first_receipt['tipo']=='anticipo' and first_receipt['recibido']=='50.00' and first_receipt['cambio']=='9.75','anticipo conserva recibido, cambio e importe aplicado')
+ pc=caja.call('cobros/solicitudes/'+str(pid));check(pc['resumen']['pagado']=='40.25' and pc['resumen']['saldo']=='80.25' and len(pc['pagos'])==1,'anticipo actualiza saldo sin duplicar reintento')
+ caja.call('cobros/solicitudes/'+str(pid),'POST',dict(paybody(pc,'1.00'),version=before['version']),code=409)
+ # Unique movement collision happens after the insert attempt: the whole transaction must roll back.
+ pre_collision=caja.call('caja')['turno'];caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'1.00',key=manual_key),code=409)
+ check(caja.call('caja')['turno']['version']==pre_collision['version'] and caja.call('cobros/solicitudes/'+str(pid))['resumen']['pagado']=='40.25','fallo al vincular movimiento revierte pago, saldo y versión del turno')
+ secondpay=caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'30.00','tarjeta',referencia='Autorización ficticia'),code=201)
+ pc=caja.call('cobros/solicitudes/'+str(pid));thirdpay=caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'10.00','transferencia',referencia='Transferencia ficticia'),code=201)
+ check(caja.call('cobros/pagos/'+str(secondpay['id']))['tipo']=='abono','pagos parciales posteriores se registran como abono')
+ pc=caja.call('cobros/solicitudes/'+str(pid));cash_now=caja.call('caja')['turno']
+ check(cash_now['resumen']['esperado']=='147.35' and cash_now['resumen']['ingresos_otros']=='40.00' and cash_now['resumen']['cobros_solicitudes']=='80.25' and cash_now['resumen']['otros_ingresos']=='7.10','caja suma cada pago una vez y separa efectivo, otros métodos e ingresos manuales')
+ linked_moves=[m for m in cash_now['resumen']['movimientos'] if m['pago_id']]
+ check(len(linked_moves)==3 and all(str(m['solicitud_id'])==str(pid) for m in linked_moves),'cada pago enlaza exactamente un movimiento del turno')
+ detail=admin.call('solicitudes/'+str(pid));check(detail['cobros']['saldo']=='40.25','solicitud muestra saldo acumulado de anticipos y abonos')
+ # Editing a paid request cannot change its patient or lower its total below collected amounts.
+ other_patient=create('pacientes',{'nombre':'Otro paciente','apellidos':'Ficticio','sexo':'no_especificado'})
+ admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':detail['version'],'paciente_id':other_patient['id'],'estudios':[study['id']]},code=409)
+ admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':detail['version'],'paciente_id':patient['id'],'estudios':[qs['id']]},code=409)
+ caja.call('caja/cerrar','POST',{'version':initial_turn_version,'contado':'147.35'},code=409)
+ caja.call('caja/cerrar','POST',{'version':cash_now['version'],'contado':'147.35'})
+ historical_cut=next(t for t in caja.call('caja')['historial'] if str(t['id'])==str(new_turn))
+ check(historical_cut['resumen']['cobros_solicitudes']=='80.25','corte conserva los pagos cobrados en su propio turno')
+ caja.call('cobros/solicitudes/'+str(pid),'POST',advance_body,code=201)
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'1.00'),code=409)
+ caja.call('caja/abrir','POST',{'fondo':'0.00'});pc=caja.call('cobros/solicitudes/'+str(pid))
+ finalpay=caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'40.25','transferencia'),code=201)
+ last=caja.call('cobros/pagos/'+str(finalpay['id']));check(last['tipo']=='liquidacion' and last['recibido'] is None and last['datos']['saldo_despues']=='0.00','último abono liquida el saldo sin inventar efectivo recibido')
+ final_context=caja.call('cobros/solicitudes/'+str(pid));check(final_context['resumen']['estado_pago']=='pagada' and final_context['resumen']['pagado']=='120.50','solicitud liquidada mantiene total exacto de pagos')
+ caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(final_context,'0.01'),code=409)
+ check(caja.call('caja')['turno']['resumen']['esperado']=='0.00' and caja.call('caja')['turno']['resumen']['ingresos_otros']=='40.25','abono en otro turno ingresa a ese turno sin aumentar efectivo por transferencia')
+ cuts=caja.call('caja')['historial'];check(next(t['resumen'] for t in cuts if str(t['id'])==str(new_turn))==historical_cut['resumen'],'abonos posteriores no modifican cortes cerrados')
+ check(next(t['resumen'] for t in cuts if str(t['id'])==str(closed['id']))==closed['resumen'],'cortes manuales previos permanecen intactos')
+ check(caja.call('cobros/pagos/'+str(advance['id']))['datos']['saldo_despues']=='80.25','recibo anterior conserva saldo al momento de su pago')
+ listpaid=caja.call('cobros/solicitudes?q=SOL-'+str(pid).zfill(6)+'&estado=pagada');check(len(listpaid['registros'])==1,'búsqueda financiera encuentra solicitudes pagadas por folio')
+ # Increasing a settled request creates a new balance; a decrease cannot cross the paid total.
+ detail=admin.call('solicitudes/'+str(pid));admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':detail['version'],'paciente_id':patient['id'],'estudios':[study['id'],qs['id']]})
+ check(caja.call('cobros/solicitudes/'+str(pid))['resumen']['saldo']=='10.00','ampliar solicitud conserva pagos y calcula el nuevo saldo')
+ detail=admin.call('solicitudes/'+str(pid));admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':detail['version'],'paciente_id':patient['id'],'estudios':[study['id']]})
+ # Two independent PHP processes contend for the same request with distinct turns.
+ parallel_order=admin.call('solicitudes','POST',{'estado':'registrada','paciente_id':patient['id'],'estudios':[study['id']]},code=201);parallel_id=parallel_order['id']
+ admin.call('usuarios','POST',{'nombre':'Segunda caja QA','nombre_usuario':'caja2qa','rol_id':roles['Caja']['id'],'contrasena':'TemporalQA-123','activo':1},code=201)
+ caja2=Client();caja2.login('caja2qa','TemporalQA-123');caja2.call('contrasena','POST',{'actual':'TemporalQA-123','nueva':'PersonalQA-456'});caja2.call('caja/abrir','POST',{'fondo':'0.00'})
+ ca=caja.call('cobros/solicitudes/'+str(parallel_id));cb=caja2.call('cobros/solicitudes/'+str(parallel_id));a_user=caja.session()['usuario'];b_user=caja2.session()['usuario']
+ marker=ROOT/'storage/pruebas'/('cobro-concurrente-'+uuid.uuid4().hex+'.start')
+ php_parallel="require 'app/Config/Database.php'; require 'app/Helpers/HttpError.php'; require 'app/Helpers/Dinero.php'; require 'app/Services/Auth.php'; require 'app/Models/Empresa.php'; require 'app/Services/Cobro.php'; $d=json_decode($argv[1],true); $db=(new Database())->connect(); $q=$db->prepare('SELECT contrasena_hash FROM usuarios WHERE id=?');$q->execute(array($d['actor']));$_SESSION=array('usuario_id'=>$d['actor'],'actividad'=>time(),'credencial'=>hash('sha256',$q->fetchColumn()),'epoch'=>Auth::epoch()); $until=microtime(true)+10;while(!file_exists($d['marker'])&&microtime(true)<$until){usleep(10000);}try{$r=(new Cobro($db))->registrar($d['solicitud'],$d['body']);echo json_encode(array('status'=>201,'id'=>$r['id']));}catch(HttpError $e){echo json_encode(array('status'=>$e->getCode()));}"
+ processes=[]
+ for who,ctx in [(a_user,ca),(b_user,cb)]:
+  payload={'actor':who['id'],'marker':str(marker),'solicitud':parallel_id,'body':paybody(ctx,'80.00')}
+  processes.append(subprocess.Popen(CMD+['-r',php_parallel,json.dumps(payload)],cwd=ROOT,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True))
+ marker.touch()
+ try:
+  outcomes=[]
+  for proc in processes:
+   stdout,stderr=proc.communicate(timeout=20);check(proc.returncode==0,'proceso concurrente termina sin error');outcomes.append(json.loads(stdout))
+  check(sorted(r['status'] for r in outcomes)==[201,409],'cobros concurrentes no exceden saldo ni aceptan versiones obsoletas')
+  check(caja.call('cobros/solicitudes/'+str(parallel_id))['resumen']['pagado']=='80.00','solo un cobro concurrente se guarda')
+ finally:marker.unlink(missing_ok=True)
+
+ # Cancellation/refund workflow: request -> administrator decision -> cash execution.
+ def actionbody(orderid,type='cancelacion',**extra):
+  context=admin.call('solicitudes/'+str(orderid))
+  return dict({'tipo':type,'motivo':'Motivo ficticio de QA','version':context['version'],'clave':str(uuid.uuid4())},**extra)
+ def decide(actionid,orderid,decision='aprobar',**extra):
+  context=admin.call('solicitudes/'+str(orderid))
+  return admin.call('anulaciones/'+str(actionid)+'/decidir','POST',dict({'decision':decision,'motivo':'Revisado por administrador QA','version':context['version']},**extra))
+ lab.call('anulaciones',code=403)
+ recep.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,motivo=''),code=422)
+ recep.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,motivo='x'*501),code=422)
+ refundbody=actionbody(pid,'devolucion',pago_id=advance['id'],importe='15.25',clave=advance_body['clave'])
+ req=caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',refundbody,code=201);aid=req['id']
+ retry=caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',refundbody,code=201)
+ check(str(retry['id'])==str(aid) and retry['repetido'],'reintento de petición devuelve el mismo folio')
+ caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',dict(refundbody,importe='1.00'),code=409)
+ caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,'devolucion',pago_id=advance['id'],importe='25.01'),code=409)
+ caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,'devolucion',pago_id=advance['id'],importe='0'),code=422)
+ caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,'devolucion',pago_id=advance['id'],importe='1.001'),code=422)
+ caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,'devolucion',pago_id=999999,importe='1.00'),code=409)
+ current_turn=caja.call('caja')['turno'];execute={'turno_id':current_turn['id']}
+ caja.call('anulaciones/'+str(aid)+'/ejecutar','POST',execute,code=409)
+ caja.call('anulaciones/'+str(aid)+'/decidir','POST',{'decision':'aprobar','motivo':'No autorizado','version':1},code=403)
+ admin.call('anulaciones/'+str(aid)+'/decidir','POST',{'decision':'aprobar','motivo':'','version':1},code=422)
+ admin.call('anulaciones/'+str(aid)+'/decidir','POST',{'decision':'aprobar','motivo':'Obsoleto','version':0},code=409)
+ decide(aid,pid)
+ admin.call('anulaciones/'+str(aid)+'/ejecutar','POST',{'turno_id':foreign_turn['id']},code=409)
+ caja.call('anulaciones/'+str(aid)+'/ejecutar','POST',{'turno_id':foreign_turn['id']},code=409)
+ recep.call('anulaciones/'+str(aid)+'/ejecutar','POST',execute,code=403)
+ caja.call('caja/ingreso','POST',{'importe':'200.00','concepto':'Fondo ficticio para devoluciones QA','metodo':'efectivo','clave':str(uuid.uuid4())})
+ before_refund=caja.call('caja')['turno'];original_receipt=caja.call('cobros/pagos/'+str(advance['id']))
+ caja.call('anulaciones/'+str(aid)+'/ejecutar','POST',execute)
+ caja.call('anulaciones/'+str(aid)+'/ejecutar','POST',execute)
+ after_refund=caja.call('caja')['turno']
+ check(round(float(before_refund['resumen']['esperado'])-float(after_refund['resumen']['esperado']),2)==15.25 and after_refund['resumen']['devoluciones_solicitudes']=='15.25','devolución resta efectivo una sola vez en el turno ejecutor')
+ pc=caja.call('cobros/solicitudes/'+str(pid))
+ check(pc['resumen']['pagado']=='105.25' and pc['resumen']['devuelto']=='15.25' and pc['resumen']['saldo']=='15.25','devolver en solicitud vigente reabre saldo y conserva cobrado bruto')
+ check(caja.call('cobros/pagos/'+str(advance['id']))==original_receipt,'devolución no altera recibo de ingreso original')
+ receipt=caja.call('anulaciones/'+str(aid)+'/recibo');check(receipt['datos']['responsable']=='cajaqa' and receipt['autorizador_nombre']=='Admin QA' and receipt['importe']=='15.25','recibo de devolución conserva autorización, motivo y responsable')
+ cancellation=recep.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid),code=201);cid=cancellation['id']
+ recep.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid),code=409)
+ check(admin.call('solicitudes/'+str(pid))['estado']=='registrada','petición pendiente no cancela por sí sola')
+ decide(cid,pid)
+ cdetail=admin.call('solicitudes/'+str(pid));check(cdetail['estado']=='cancelada' and cdetail['cobros']['saldo']=='0.00' and cdetail['cobros']['por_devolver']=='105.25','cancelación autorizada elimina deuda e identifica pagos por devolver')
+ admin.call('anulaciones/'+str(cid)+'/decidir','POST',{'decision':'rechazar','motivo':'Cambiar decisión','version':cdetail['version']},code=409)
+ admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':cdetail['version'],'paciente_id':patient['id'],'estudios':[study['id']]},code=409)
+ pc=caja.call('cobros/solicitudes/'+str(pid));caja.call('cobros/solicitudes/'+str(pid),'POST',paybody(pc,'1.00'),code=409)
+ check(len(caja.call('cobros/solicitudes?estado=cancelada&q=SOL-'+str(pid).zfill(6))['registros'])==1,'cancelada permanece localizable con su historial financiero')
+ # Rejection releases reserved amounts without any financial movement.
+ rbody=actionbody(pid,'devolucion',pago_id=secondpay['id'],importe='30.00')
+ rejected=caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',rbody,code=201)
+ reserved=caja.call('cobros/solicitudes/'+str(pid));check(next(p for p in reserved['pagos'] if str(p['id'])==str(secondpay['id']))['disponible_devolucion']=='0.00','pendiente reserva saldo del pago')
+ decide(rejected['id'],pid,'rechazar')
+ caja.call('anulaciones/'+str(rejected['id'])+'/ejecutar','POST',execute,code=409)
+ card=caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',dict(rbody,clave=str(uuid.uuid4())),code=201)
+ decide(card['id'],pid)
+ cash_before_card=caja.call('caja')['turno']['resumen'];caja.call('anulaciones/'+str(card['id'])+'/ejecutar','POST',execute)
+ card_summary=caja.call('caja')['turno']['resumen']
+ check(card_summary['esperado']==cash_before_card['esperado'] and card_summary['ingresos_otros']==cash_before_card['ingresos_otros'] and card_summary['egresos_otros']=='30.00','devolución por tarjeta se separa del efectivo y del ingreso bruto')
+ check(caja.call('anulaciones/'+str(card['id'])+'/recibo')['metodo']=='tarjeta','método devuelto se toma del pago original')
+ # Remaining cash and transfer installments can be refunded independently.
+ for payment,amount in [(advance,'25.00'),(thirdpay,'10.00'),(finalpay,'40.25')]:
+  a=caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,'devolucion',pago_id=payment['id'],importe=amount),code=201)
+  decide(a['id'],pid);caja.call('anulaciones/'+str(a['id'])+'/ejecutar','POST',execute)
+ done=caja.call('cobros/solicitudes/'+str(pid))
+ check(done['resumen']['pagado']=='0.00' and done['resumen']['devuelto']=='120.50' and done['resumen']['por_devolver']=='0.00','cancelada totalmente devuelta queda sin saldo de cobro ni devolución')
+ caja.call('solicitudes/'+str(pid)+'/anulaciones','POST',actionbody(pid,'devolucion',pago_id=advance['id'],importe='0.01'),code=409)
+ check(next(t['resumen'] for t in caja.call('caja')['historial'] if str(t['id'])==str(new_turn))==historical_cut['resumen'],'devoluciones posteriores conservan el corte que cobró originalmente')
+ check(any(m.get('devolucion_id') for m in caja.call('caja')['turno']['resumen']['movimientos']),'egreso enlaza petición autorizada y pago de origen')
+ # Cancelling a request with validated results blocks future operations/PDF, retains history.
+ clinical_cancel=admin.call('solicitudes/'+str(oid)+'/anulaciones','POST',actionbody(oid),code=201);decide(clinical_cancel['id'],oid)
+ lab.call('resultados/plantilla?solicitud_id='+str(oid)+'&estudio_id='+str(study['id']),code=409)
+ resp.call('resultados/'+str(lid)+'/corregir','POST',{'version':3,'motivo':'No permitido','valores':[{'analito_id':analyte['id'],'valor':'1'}]},code=409)
+ resp.call('resultados/'+str(lid)+'/validar','POST',{'version':3},code=409)
+ recep.call('resultados/'+str(lid)+'/entregar','POST',{'version':3,'destinatario':'QA'},code=409)
+ recep.call('resultados/'+str(lid)+'/informe.pdf?version=3',code=409)
+ check(resp.call('resultados/'+str(lid))['solicitud_cancelada'],'historial clínico sigue consultable con aviso de cancelación')
+ # Cancellation without payments requires no cash turn and creates no money movement.
+ empty_cancel=admin.call('solicitudes/'+str(qo['id'])+'/anulaciones','POST',actionbody(qo['id']),code=201)
+ decide(empty_cancel['id'],qo['id'])
+ check(admin.call('solicitudes/'+str(qo['id']))['cobros']['por_devolver']=='0.00','cancelar sin pagos no genera devolución ficticia')
+
+ # Two processes cannot reserve more than the paid amount, or execute one refund twice.
+ marker=ROOT/'storage/pruebas'/('devolucion-concurrente-'+uuid.uuid4().hex+'.start')
+ php_refund=php_parallel.replace("$r=(new Cobro($db))->registrar($d['solicitud'],$d['body']);", "$r=$d['mode']==='solicitar'?(new Anulacion($db))->solicitar($d['solicitud'],$d['body']):(new Anulacion($db))->ejecutar($d['action'],$d['body']);")
+ def refund_race(payloads):
+  procs=[subprocess.Popen(CMD+['-r',php_refund,json.dumps(p)],cwd=ROOT,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True) for p in payloads]
+  marker.touch()
+  try:
+   result=[]
+   for proc in procs:
+    out,err=proc.communicate(timeout=20);check(proc.returncode==0,'proceso de devolución concurrente termina sin error');result.append(json.loads(out))
+   return result
+  finally:marker.unlink(missing_ok=True)
+ race_body=actionbody(parallel_id,'devolucion',pago_id=caja.call('cobros/solicitudes/'+str(parallel_id))['pagos'][0]['id'],importe='60.00')
+ race_out=refund_race([{'actor':u['id'],'marker':str(marker),'solicitud':parallel_id,'mode':'solicitar','body':dict(race_body,clave=str(uuid.uuid4()))} for u in [a_user,b_user]])
+ check(sorted(r['status'] for r in race_out)==[201,409],'peticiones concurrentes reservan el pago sin permitir exceso de devolución')
+ race_a=next(r['id'] for r in race_out if r['status']==201);decide(race_a,parallel_id)
+ payload={'actor':a_user['id'],'marker':str(marker),'mode':'ejecutar','action':race_a,'body':execute}
+ check([r['status'] for r in refund_race([payload,payload])]==[201,201],'reintento concurrente de ejecución devuelve la misma devolución')
+ check(caja.call('cobros/solicitudes/'+str(parallel_id))['resumen']['devuelto']=='60.00','ejecución simultánea crea un solo egreso de devolución')
+ refund_cut=caja.call('caja')['turno'];caja.call('caja/cerrar','POST',{'version':refund_cut['version'],'contado':refund_cut['resumen']['esperado']})
+ caja.call('anulaciones/'+str(aid)+'/ejecutar','POST',execute)
+ check(caja.call('caja')['historial'][0]['resumen']['devoluciones_solicitudes']=='180.50','corte guarda devoluciones y reintento después del cierre no modifica el corte')
+ caja.call('caja/abrir','POST',{'fondo':'0.00'})
+
  # Install reruns preserve records and customized permissions.
  subprocess.run(CMD+[str(ROOT/'scripts/instalar.php')],env=env,check=True,capture_output=True)
  check(get('pacientes',patient['id'])['codigo']==p_row['codigo'],'migración repetible conserva pacientes')
@@ -298,7 +487,12 @@ try:
  admin.call('roles/'+str(roles['Administrador']['id']),'PUT',{'nombre':'Administrador','permisos':roles['Administrador']['permisos']},code=409)
  invalid=dict(roles['Caja']['permisos']);invalid['todo']=True
  admin.call('roles','POST',{'nombre':'Malicioso','permisos':invalid},code=422)
- logs=admin.call('bitacora');logs+=admin.call('bitacora?antes='+str(logs[-1]['id']));logs+=admin.call('bitacora?antes='+str(logs[-1]['id']));kinds={r['tipo'] for r in logs}
+ logs=[];cursor='0'
+ for _ in range(12):
+  batch=admin.call('bitacora?antes='+cursor);logs+=batch
+  if len(batch)<50:break
+  cursor=str(batch[-1]['id'])
+ kinds={r['tipo'] for r in logs}
  check({'resultado_corregir','resultado_validar','resultado_entregar','resultado_consultado','usuario_editado','permisos_editados'}<=kinds,'bitácora de operaciones y consultas')
  check('contrasena_hash' not in json.dumps(logs) and 'RestablecidaQA-789' not in json.dumps(logs),'bitácora sin contraseñas ni hashes')
  # Failed logins are persisted and throttled across sessions.

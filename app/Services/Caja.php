@@ -4,9 +4,9 @@ class Caja {
  private function actor($permission){$auth=new Auth($this->db);$auth->permiso('operar_caja');return $auth->permiso($permission);}
  private function summary(array $t){
   if($t['estado']==='cerrado')return json_decode($t['resumen_cierre'],true);
-  $q=$this->db->prepare('SELECT * FROM caja_movimientos WHERE turno_id=? ORDER BY id');$q->execute(array($t['id']));$rows=$q->fetchAll();$cashIn=0;$cashOut=0;$other=0;
-  foreach($rows as $m){$n=Dinero::centavos($m['importe']);if($m['metodo']==='efectivo'){if($m['tipo']==='ingreso')$cashIn+=$n;else $cashOut+=$n;}else $other+=$n;}
-  return array('fondo'=>$t['fondo'],'ingresos_efectivo'=>Dinero::texto($cashIn),'egresos_efectivo'=>Dinero::texto($cashOut),'ingresos_otros'=>Dinero::texto($other),'esperado'=>Dinero::texto(Dinero::centavos($t['fondo'])+$cashIn-$cashOut),'movimientos'=>$rows);
+  $q=$this->db->prepare('SELECT m.*,p.id pago_id,p.solicitud_id,p.tipo tipo_pago,a.id devolucion_id,a.pago_id pago_devuelto_id,a.solicitud_id solicitud_devuelta_id FROM caja_movimientos m LEFT JOIN solicitud_pagos p ON p.movimiento_id=m.id LEFT JOIN solicitud_acciones a ON a.movimiento_id=m.id WHERE m.turno_id=? ORDER BY m.id');$q->execute(array($t['id']));$rows=$q->fetchAll();$cashIn=0;$cashOut=0;$other=0;$linked=0;$manual=0;$otherOut=0;$refunds=0;
+  foreach($rows as $m){$n=Dinero::centavos($m['importe']);if($m['devolucion_id'])$refunds+=$n;if($m['tipo']==='ingreso'){if($m['pago_id'])$linked+=$n;else $manual+=$n;}if($m['metodo']==='efectivo'){if($m['tipo']==='ingreso')$cashIn+=$n;else $cashOut+=$n;}else{if($m['tipo']==='ingreso')$other+=$n;else $otherOut+=$n;}}
+  return array('fondo'=>$t['fondo'],'ingresos_efectivo'=>Dinero::texto($cashIn),'egresos_efectivo'=>Dinero::texto($cashOut),'ingresos_otros'=>Dinero::texto($other),'esperado'=>Dinero::texto(Dinero::centavos($t['fondo'])+$cashIn-$cashOut),'movimientos'=>$rows,'cobros_solicitudes'=>Dinero::texto($linked),'otros_ingresos'=>Dinero::texto($manual),'egresos_otros'=>Dinero::texto($otherOut),'devoluciones_solicitudes'=>Dinero::texto($refunds));
  }
  public function contexto(){
   $u=$this->actor('operar_caja');$q=$this->db->prepare("SELECT * FROM caja_turnos WHERE usuario_id=? ORDER BY id DESC LIMIT 30");$q->execute(array($u['id']));$rows=$q->fetchAll();$open=null;foreach($rows as &$t){$t['resumen']=$this->summary($t);if($t['estado']==='abierto')$open=$t;}unset($t);return array('turno'=>$open,'historial'=>$rows);

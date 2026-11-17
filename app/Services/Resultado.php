@@ -45,6 +45,7 @@ class Resultado
    if($id===null){$rows=$this->db->query('SELECT id,referencia,version,estado,actualizado_en FROM resultados'.($draft?'':" WHERE estado='validado'").' ORDER BY id DESC LIMIT 100')->fetchAll();}
    else{
     $q=$this->db->prepare('SELECT * FROM resultados WHERE id=?');$q->execute(array($id));$rows=$q->fetch();if(!$rows)throw new HttpError('Resultado no encontrado.',404);if(!$draft&&$rows['estado']!=='validado')throw new HttpError('El resultado aún no está autorizado para consulta.',403);
+    $rows['solicitud_cancelada']=false;if($rows['solicitud_id']){$q=$this->db->prepare('SELECT estado FROM solicitudes WHERE id=?');$q->execute(array($rows['solicitud_id']));$rows['solicitud_cancelada']=$q->fetchColumn()==='cancelada';}
     $q=$this->db->prepare('SELECT v.version,v.contenido,v.datos_analitos,v.contexto,v.motivo,v.usuario_id,v.creado_en,a.usuario_id validado_por,a.creado_en validado_en,COALESCE(a.usuario_nombre,u.nombre) validado_nombre FROM resultado_versiones v LEFT JOIN resultado_validaciones a ON a.resultado_id=v.resultado_id AND a.version=v.version LEFT JOIN usuarios u ON u.id=a.usuario_id WHERE v.resultado_id=? ORDER BY v.version DESC');$q->execute(array($id));$rows['historial']=$q->fetchAll();
     foreach($rows['historial'] as &$v){$v['analitos']=$v['datos_analitos']!==null?json_decode($v['datos_analitos'],true):null;$v['contexto']=$v['contexto']!==null?json_decode($v['contexto'],true):null;unset($v['datos_analitos']);}unset($v);
     if(!$draft)$rows['historial']=array_values(array_filter($rows['historial'],function($v)use($rows){return (string)$v['version']===(string)$rows['version'];}));
@@ -64,7 +65,7 @@ class Resultado
     $template=$this->template($sol,$study);$analytes=$this->valores($template['analitos'],$d);$context=$template['contexto'];$ref=$template['referencia'];
     $q=$this->db->prepare('INSERT INTO resultados(referencia,creado_por,solicitud_id,estudio_id) VALUES(?,?,?,?)');$q->execute(array($ref,$actor['id'],$sol,$study));$id=$this->db->lastInsertId();$version=1;$reason='Captura inicial';
    }else{
-    $q=$this->db->prepare('SELECT * FROM resultados WHERE id=? FOR UPDATE');$q->execute(array($id));$r=$q->fetch();if(!$r)throw new HttpError('Resultado no encontrado.',404);
+    $q=$this->db->prepare('SELECT * FROM resultados WHERE id=? FOR UPDATE');$q->execute(array($id));$r=$q->fetch();if(!$r)throw new HttpError('Resultado no encontrado.',404);$this->activa($r);
     if(!isset($d['version'])||(string)$d['version']!==(string)$r['version'])throw new HttpError('El resultado cambió. Actualiza antes de continuar.',409);
     $q=$this->db->prepare('SELECT * FROM resultado_versiones WHERE resultado_id=? AND version=?');$q->execute(array($id,$r['version']));$previous=$q->fetch();
     if($accion==='capturar'||$accion==='corregir'){
@@ -90,10 +91,11 @@ class Resultado
    Auditoria::registrar($this->db,$actor['id'],'resultado_'.$accion,'Resultado '.$id,'Operación: '.$accion,null,array('resultado_id'=>$id),array('version_anterior'=>$r?$r['version']:null));$this->db->commit();return array('id'=>$id);
   }catch(Throwable $e){if($this->db->inTransaction())$this->db->rollBack();if($e instanceof PDOException&&isset($e->errorInfo[1])&&(int)$e->errorInfo[1]===1062)throw new HttpError('Ya existe un resultado para este estudio o la operación ya fue registrada.',409);throw $e;}
  }
+ private function activa(array $r){if(!empty($r['solicitud_id'])){$q=$this->db->prepare('SELECT estado FROM solicitudes WHERE id=?');$q->execute(array($r['solicitud_id']));if($q->fetchColumn()==='cancelada')throw new HttpError('La solicitud está cancelada. Su historial se conserva, pero no admite captura, validación, entrega ni nuevos informes.',409);}}
  public function informe($id,$version){
   $this->db->beginTransaction();try{
    $this->locks();$actor=(new Auth($this->db))->permiso('ver_resultados');
-   $q=$this->db->prepare('SELECT * FROM resultados WHERE id=? FOR UPDATE');$q->execute(array($id));$r=$q->fetch();if(!$r)throw new HttpError('Resultado no encontrado.',404);
+   $q=$this->db->prepare('SELECT * FROM resultados WHERE id=? FOR UPDATE');$q->execute(array($id));$r=$q->fetch();if(!$r)throw new HttpError('Resultado no encontrado.',404);$this->activa($r);
    if($r['estado']!=='validado'||!is_scalar($version)||(string)$version!==(string)$r['version'])throw new HttpError('Solo se emite el informe de la versión vigente validada. Actualiza la consulta.',409);
    $q=$this->db->prepare('SELECT v.*,a.creado_en validado_en,COALESCE(a.usuario_nombre,u.nombre) validado_nombre FROM resultado_versiones v JOIN resultado_validaciones a ON a.resultado_id=v.resultado_id AND a.version=v.version JOIN usuarios u ON u.id=a.usuario_id WHERE v.resultado_id=? AND v.version=?');$q->execute(array($id,$version));$v=$q->fetch();
    if(!$v||$v['datos_analitos']===null||$v['contexto']===null)throw new HttpError('Este resultado histórico no tiene una captura estructurada con paciente para emitir el nuevo informe.',409);

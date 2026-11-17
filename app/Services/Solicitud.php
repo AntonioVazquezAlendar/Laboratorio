@@ -11,12 +11,14 @@ class Solicitud {
   $actor=(new Auth($this->db))->permiso('ver_ordenes');$where='';$p=array();
   if(isset($f['paciente_id'])){if(!is_scalar($f['paciente_id'])||!ctype_digit((string)$f['paciente_id']))throw new HttpError('Paciente no válido.');(new Auth($this->db))->permiso('ver_pacientes');$where=' WHERE paciente_id=?';$p[]=$f['paciente_id'];}
   $q=$this->db->prepare('SELECT id,paciente_id,estado,total,version,datos,creado_en FROM solicitudes'.$where.' ORDER BY id DESC LIMIT 100');$q->execute($p);$rows=$q->fetchAll();
-  foreach($rows as &$r){$d=json_decode($r['datos'],true);$r['paciente_nombre']=$d['paciente_nombre'];unset($r['datos']);}unset($r);
+  foreach($rows as &$r){$d=json_decode($r['datos'],true);$r['paciente_nombre']=$d['paciente_nombre'];if(!empty($actor['permisos']['ver_cobros']))$r['cobros']=Cobro::resumen($this->db,$r['id'],$r['total']);unset($r['datos']);}unset($r);
   $this->db->beginTransaction();Auditoria::registrar($this->db,$actor['id'],'solicitud_consultada','Solicitudes','Consulta de solicitudes',null,null,array('paciente_id'=>isset($f['paciente_id'])?$f['paciente_id']:null));$this->db->commit();return $rows;
  }
  public function obtener($id,$impresion=false){
   $auth=new Auth($this->db);$actor=$auth->permiso('ver_ordenes');if($impresion)$auth->permiso('imprimir_solicitudes');
   $q=$this->db->prepare('SELECT * FROM solicitudes WHERE id=?');$q->execute(array($id));$r=$q->fetch();if(!$r)throw new HttpError('Solicitud no encontrada.',404);$r['datos']=json_decode($r['datos'],true);
+  if(!empty($actor['permisos']['ver_cobros']))$r['cobros']=Cobro::resumen($this->db,$id,$r['total']);
+  $r['cancelacion']=null;if($r['estado']==='cancelada'){$q=$this->db->prepare("SELECT motivo,motivo_decision,autorizador_nombre,realizado_en FROM solicitud_acciones WHERE solicitud_id=? AND tipo='cancelacion' AND estado='realizada' ORDER BY id DESC LIMIT 1");$q->execute(array($id));$r['cancelacion']=$q->fetch();}
   $r['resultados']=array();if(!empty($actor['permisos']['ver_resultados'])){$q=$this->db->prepare('SELECT id,estudio_id,version,estado FROM resultados WHERE solicitud_id=?');$q->execute(array($id));$r['resultados']=$q->fetchAll();}
   $this->db->beginTransaction();Auditoria::registrar($this->db,$actor['id'],$impresion?'solicitud_impresa':'solicitud_consultada','Solicitud '.$id,$impresion?'Preparación de comprobante u orden de trabajo':'Consulta de solicitud',null,null);$this->db->commit();return $r;
  }
@@ -32,7 +34,8 @@ class Solicitud {
    // Catalog writes lock these tables in this order too.
    foreach(array('tipos_muestra','metodos','companias','medicos','pacientes','analitos','estudios','precios') as $table)$this->db->query('SELECT id FROM '.$table.' ORDER BY id FOR SHARE')->fetchAll();
    $old=null;$previous=array();
-   if($id){$q=$this->db->prepare('SELECT * FROM solicitudes WHERE id=? FOR UPDATE');$q->execute(array($id));$old=$q->fetch();if(!$old)throw new HttpError('Solicitud no encontrada.',404);if(!isset($d['version'])||(string)$d['version']!==(string)$old['version'])throw new HttpError('La solicitud cambió. Actualiza antes de guardar.',409);$previous=json_decode($old['datos'],true);if($old['estado']==='registrada'&&$estado==='cotizacion')throw new HttpError('Una solicitud registrada no vuelve a cotización.',409);if($old['estado']==='cotizacion'&&$estado==='registrada')$auth->permiso('crear_ordenes');}
+   if($id){$q=$this->db->prepare('SELECT * FROM solicitudes WHERE id=? FOR UPDATE');$q->execute(array($id));$old=$q->fetch();if(!$old)throw new HttpError('Solicitud no encontrada.',404);if($old['estado']==='cancelada')throw new HttpError('Una solicitud cancelada conserva su historial y no puede editarse.',409);if(!isset($d['version'])||(string)$d['version']!==(string)$old['version'])throw new HttpError('La solicitud cambió. Actualiza antes de guardar.',409);$previous=json_decode($old['datos'],true);if($old['estado']==='registrada'&&$estado==='cotizacion')throw new HttpError('Una solicitud registrada no vuelve a cotización.',409);if($old['estado']==='cotizacion'&&$estado==='registrada')$auth->permiso('crear_ordenes');}
+   if($old){$paid=Cobro::resumen($this->db,$id,$old['total']);if($paid['numero_pagos']>0 && (string)(isset($d['paciente_id'])?$d['paciente_id']:'')!==(string)$old['paciente_id'])throw new HttpError('No se cambia el paciente de una solicitud con cobros registrados.',409);}
    $patient=$this->row('pacientes',isset($d['paciente_id'])?$d['paciente_id']:null,$estado==='registrada');
    $doctor=$this->row('medicos',isset($d['medico_id'])?$d['medico_id']:null);
    $company=$this->row('companias',isset($d['compania_id'])?$d['compania_id']:null);
@@ -50,6 +53,7 @@ class Solicitud {
     $q=$this->db->prepare('SELECT a.id,a.codigo,a.nombre,a.unidad,a.tipo_resultado,a.decimales,a.referencia_texto,a.activo,m.nombre metodo_nombre FROM estudio_analitos ea JOIN analitos a ON a.id=ea.analito_id LEFT JOIN metodos m ON m.id=a.metodo_id WHERE ea.estudio_id=? ORDER BY ea.orden');$q->execute(array($studyId));$analytes=$q->fetchAll();foreach($analytes as $a)if(!$a['activo'])throw new HttpError('El estudio incluye un analito inactivo. Actualiza el catálogo.');
     $items[]=array('id'=>$study['id'],'codigo'=>$study['codigo'],'nombre'=>$study['nombre'],'precio'=>$price['importe'],'tarifa_compania_id'=>$price['compania_id'],'muestra'=>$sample?$sample['nombre']:'Sin especificar','recipiente'=>$sample?$sample['recipiente']:'','metodo'=>$method?$method['nombre']:'Sin especificar','indicaciones'=>$study['indicaciones'],'tiempo_entrega'=>$study['tiempo_entrega'],'analitos'=>$analytes);$total+=Dinero::centavos($price['importe']);
    }
+   if($old && $paid['numero_pagos']>0 && $total<Dinero::centavos($paid['pagado']))throw new HttpError('El total de la solicitud no puede quedar por debajo de los cobros registrados.',409);
    if($total>999999999999)throw new HttpError('El total excede el máximo permitido.');
    $data=array('laboratorio'=>$old&&isset($previous['laboratorio'])?$previous['laboratorio']:(new Empresa($this->db))->documento(),'paciente_nombre'=>$patient?trim($patient['nombre'].' '.$patient['apellidos']):'Cotización sin paciente','expediente'=>$patient?$patient['codigo']:'','fecha_nacimiento'=>$patient?$patient['fecha_nacimiento']:null,'sexo'=>$patient?$patient['sexo']:null,'medico_nombre'=>$doctor?trim($doctor['nombre'].' '.$doctor['apellidos']):'Sin asignar','compania_nombre'=>$company?$company['nombre']:'Público general','estudios'=>$items,'notas'=>$notas);
    $values=array($patient?$patient['id']:null,$doctor?$doctor['id']:null,$companyId,$estado,json_encode($data,JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR),Dinero::texto($total));

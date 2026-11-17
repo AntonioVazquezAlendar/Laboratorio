@@ -48,6 +48,19 @@ if (preg_match('/^solicitudes\/([0-9]+)(?:\/(impresion))?$/D',$route,$sm)) {
     if ($method==='GET') { Response::json(true,'Solicitud',(new Solicitud($db))->obtener($sm[1],isset($sm[2]))); }
     if ($method==='PUT' && !isset($sm[2])) { Response::json(true,'Solicitud actualizada',(new Solicitud($db))->guardar($datos,$sm[1])); }
 }
+if($route==='anulaciones' && $method==='GET')Response::json(true,'Cancelaciones y devoluciones',(new Anulacion($db))->listar($_GET));
+if(preg_match('/^solicitudes\/([0-9]+)\/anulaciones$/D',$route,$an) && $method==='POST')Response::json(true,'Petición enviada al administrador',(new Anulacion($db))->solicitar($an[1],$datos),201);
+if(preg_match('/^anulaciones\/([0-9]+)\/(decidir|ejecutar|recibo)$/D',$route,$an)){
+ if($method==='POST'&&$an[2]==='decidir')Response::json(true,'Decisión registrada',(new Anulacion($db))->decidir($an[1],$datos));
+ if($method==='POST'&&$an[2]==='ejecutar')Response::json(true,'Devolución registrada en caja',(new Anulacion($db))->ejecutar($an[1],$datos));
+ if($method==='GET'&&$an[2]==='recibo')Response::json(true,'Recibo de devolución',(new Anulacion($db))->recibo($an[1]));
+}
+if($route==='cobros/solicitudes' && $method==='GET') { Response::json(true,'Saldos de solicitudes',(new Cobro($db))->listar($_GET)); }
+if(preg_match('/^cobros\/solicitudes\/([0-9]+)$/D',$route,$cp)) {
+ if($method==='GET')Response::json(true,'Saldo y pagos',(new Cobro($db))->consultar($cp[1]));
+ if($method==='POST')Response::json(true,'Pago registrado',(new Cobro($db))->registrar($cp[1],$datos),201);
+}
+if(preg_match('/^cobros\/pagos\/([0-9]+)(?:\/(recibo))?$/D',$route,$cp) && $method==='GET') { Response::json(true,'Recibo de pago',(new Cobro($db))->recibo($cp[1],isset($cp[2]))); }
 if ($route==='caja' && $method==='GET') { Response::json(true,'Caja',(new Caja($db))->contexto()); }
 if (preg_match('/^caja\/(abrir|ingreso|egreso|cerrar)$/D',$route,$bm) && $method==='POST') { Response::json(true,'Operación de caja registrada',(new Caja($db))->operar($bm[1],$datos)); }
 if ($route==='catalogos' && $method==='GET') { Response::json(true,'Catálogos disponibles',(new Catalogo($db))->disponibles()); }

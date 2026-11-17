@@ -6,7 +6,60 @@ Aplicación PHP 7.3 compatible, MySQL y AppServ. Arquitectura y autenticación a
 
 http://localhost:8080/Laboratorio/public/
 
-En instalaciones nuevas, la primera cuenta se crea desde el navegador del mismo servidor. Este equipo ya tiene el administrador de pruebas solicitado por el usuario. El instalador no crea cuentas ni contraseñas predeterminadas.
+En instalaciones nuevas normales, la primera cuenta se crea desde el navegador del mismo servidor. Este equipo ya tiene el administrador de pruebas solicitado por el usuario. `scripts/instalar.php` prepara la estructura sin crear cuentas. El instalador de demostración de la raíz sí crea las cuentas de prueba descritas a continuación.
+
+## Instalar una demostración en otra máquina
+
+1. Instala PHP de 64 bits (7.3 o posterior), MySQL 8.0 o posterior y Apache/AppServ. Habilita `pdo_mysql` y `curl` en el PHP de Apache; GD permite incluir logos WebP. MariaDB no está contemplado por este instalador.
+2. Copia **todo el proyecto** a `C:\AppServ\www\Laboratorio`. Conserva el nombre `Laboratorio`, utilizado por las rutas de la interfaz. Puedes omitir `.git`, el archivo `app/Config/database.local.php` y los archivos de ejecución de `storage`; el instalador prepara las carpetas necesarias.
+3. Con MySQL iniciado, haz doble clic en **INSTALAR_PRUEBAS.cmd**, en la raíz. Pide servidor, usuario y contraseña de MySQL; la contraseña se escribe oculta. La cuenta MySQL necesita permisos para crear bases y tablas.
+4. Crea `laboratorio_pruebas` y guarda la conexión en `app/Config/database.local.php`, incluyendo el nombre de la nueva base. No importa datos de la base del equipo de origen.
+5. Abre `http://localhost/Laboratorio/public/`, o `http://localhost:8080/Laboratorio/public/` si Apache usa ese puerto. Aplica la protección Apache indicada en este documento para impedir el acceso HTTP a carpetas internas.
+
+También puedes ejecutarlo desde PowerShell:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\INSTALAR_PRUEBAS.ps1
+# Para otra instalación de PHP o un nombre de base diferente:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\INSTALAR_PRUEBAS.ps1 -Php "D:\AppServ\php8\php.exe" -BaseDeDatos laboratorio_pruebas_2
+```
+
+| Usuario | Rol | Contraseña temporal inicial |
+|---|---|---|
+| `admin` | Administrador | `Admin1.1` |
+| `recepcion` | Recepción | `Admin1.1` |
+| `caja` | Caja | `Admin1.1` |
+| `laboratorista` | Laboratorista | `Admin1.1` |
+| `responsable` | Responsable del laboratorio | `Admin1.1` |
+
+Todos deben cambiar su contraseña temporal al iniciar sesión, incluido el administrador. Caja puede cobrar y ejecutar devoluciones autorizadas; el administrador las autoriza; el responsable valida resultados.
+
+La base incluye los catálogos ficticios del proyecto (30 estudios, 57 analitos, 10 pacientes, 5 médicos, 3 compañías, 6 muestras, 7 métodos y 120 precios), dos solicitudes y una cotización. No se generan cobros, devoluciones ni resultados clínicos al instalar.
+
+Si se repite, una instalación terminada conserva sus registros y contraseñas. Si la base ya existe sin la marca de este instalador, se detiene antes de modificarla; usa otro nombre. Una carga interrumpida puede reanudarse en su propia base marcada. La prueba automatizada `python tests/instalacion_pruebas.py` usa una copia y bases temporales, y comprueba que la conexión de este proyecto permanezca intacta.
+
+Para uso por consola sin el asistente de Windows, `instalar_pruebas.php` admite las variables `LAB_DB_HOST`, `LAB_DB_USER`, `LAB_DB_PASSWORD` y `LAB_DB_NAME`. `--sin-configurar` prepara la demostración sin cambiar el archivo de conexión del proyecto. No publiques estos instaladores por HTTP; la raíz debe conservar sus reglas de acceso.
+
+## Alternativa: importar directamente con HeidiSQL
+
+El archivo **LABORATORIO_PRUEBAS_HEIDISQL.sql**, en la raíz, contiene la estructura completa y la misma demostración del instalador anterior, con los cinco usuarios y contraseña temporal `Admin1.1`. Se generó a partir de una base temporal nueva; no contiene registros de la base operativa de origen.
+
+1. Conéctate desde HeidiSQL a un servidor **MySQL 8.0 o posterior**, con permiso de crear bases y tablas.
+2. Abre `LABORATORIO_PRUEBAS_HEIDISQL.sql` mediante **Archivo → Cargar archivo SQL**, usando UTF-8.
+3. Ejecuta el archivo completo con **F9**. Crea y selecciona `laboratorio_pruebas`; no es necesario crearla previamente. Si ya existe, detente en el primer error. No actives continuar/ignorar errores; para otra instalación cambia las líneas `CREATE DATABASE` y `USE` a un nombre nuevo que comience con `laboratorio_`.
+4. El SQL prepara MySQL; la aplicación necesita apuntar a esa base. En el equipo destino, crea o ajusta `app/Config/database.local.php` con las credenciales locales:
+
+```php
+<?php
+return array(
+    'host' => '127.0.0.1',
+    'username' => 'TU_USUARIO_MYSQL',
+    'password' => 'TU_CONTRASENA_MYSQL',
+    'database' => 'laboratorio_pruebas'
+);
+```
+
+Después abre la aplicación e inicia sesión con cualquiera de las cinco cuentas anteriores. La contraseña de MySQL es independiente de la contraseña `Admin1.1` de los usuarios del laboratorio. `python tests/sql_heidisql.py` verifica la importación en una base aislada. `python scripts/generar_sql_pruebas.py` regenera el archivo desde una demostración temporal, conservando la conexión del proyecto.
 
 ## Funciones de esta etapa
 
@@ -29,11 +82,27 @@ En instalaciones nuevas, la primera cuenta se crea desde el navegador del mismo 
 - Recepción: solicitudes, cotizaciones convertibles, historial de paciente, comprobantes y órdenes de trabajo imprimibles. Los estudios conservan su configuración y precio histórico. La edición conserva los precios de estudios sin cambios salvo cambio de compañía; no permite cambiar paciente o retirar estudios con resultados.
 - Resultados: captura enlazada a solicitud/estudio y consulta de versiones. Recepción captura; el responsable valida. La entrega requiere validación. Las nuevas capturas usan un campo por analito y requieren solicitud y estudio. Los resultados históricos de texto libre conservan su formato y versiones.
 - Caja: turno personal, fondo inicial, ingresos por efectivo/tarjeta/transferencia, egresos en efectivo con motivo y corte imprimible. El esperado se calcula como fondo + ingresos de efectivo − egresos. Tarjetas y transferencias se muestran por separado. Un corte con diferencia exige nota y los movimientos cerrados quedan guardados.
-- Los ingresos se registran manualmente; la referencia de solicitud no aplica automáticamente un pago ni calcula adeudos. El comprobante de solicitud no acredita un pago.
+- Los anticipos y abonos se registran desde Cobros de solicitudes y actualizan saldo y caja juntos. El comprobante de solicitud no acredita un pago; cada pago tiene su propio recibo.
 
 Las migraciones son repetibles. Los permisos nuevos se incorporan una vez a los roles iniciales y los roles personalizados los reciben desactivados. El administrador puede gestionar catálogos y solicitudes, pero conserva la separación de permisos clínicos: no valida resultados por ser administrador. El usuario de pruebas `admin` ya existe; hay pacientes ficticios de demostración y no hay movimientos reales precargados.
 
-Pendientes: integración de cobros con solicitudes, cancelaciones, reembolsos, referencias estructuradas por edad/sexo, operación de muestras y envío electrónico.
+Pendientes: referencias estructuradas por edad/sexo, operación de muestras y envío electrónico.
+
+## Anticipos, abonos y saldos
+
+**Caja → Cobros de solicitudes** permite buscar por folio, expediente o paciente, filtrar pendientes/pagadas y consultar total, pagado, saldo e historial. Recepción ve los saldos desde la solicitud y puede consultar los recibos; registrar cobros requiere ver_cobros, cobrar, operar_caja y registrar_ingresos. Los roles iniciales Caja y Administrador pueden cobrar. Recepción recibe consulta financiera, sin permisos de operación de caja adicionales.
+
+Para cobrar, abre un turno personal y selecciona una solicitud registrada. Se registra un importe positivo hasta el saldo pendiente, con efectivo, tarjeta o transferencia. El primer pago parcial es anticipo, los siguientes son abonos y el que cubre el saldo es liquidación. Las cotizaciones deben convertirse en solicitud antes de cobrar.
+
+El efectivo recibido puede ser mayor al importe aplicado; el cambio se calcula y solo el importe aplicado entra al efectivo esperado. Tarjeta y transferencia se registran en el turno y en el total de cobros vinculados, sin sumarse al efectivo físico.
+
+El pago, su único movimiento de ingreso, el saldo y las versiones de solicitud/turno se guardan en una sola transacción. Una clave por intento evita cobros duplicados, incluso al reintentar tras cerrar el turno. Se rechazan cambios de versión, sobrepagos y el uso de turnos ajenos o cerrados. Los recibos conservan folio, paciente, responsable, identidad del laboratorio, importe, método, cambio y saldo al momento del pago. Se imprimen desde el historial de pagos.
+
+Una solicitud con cobros no cambia de paciente ni reduce su total por debajo de lo pagado. Agregar estudios puede generar un saldo adicional. Los cortes cerrados mantienen su resumen, aunque después se reciba otro abono en un turno nuevo.
+
+Los ingresos manuales anteriores se conservan y no se asignan automáticamente por texto a una solicitud. Los pagos no se editan ni se borran; las devoluciones se registran mediante peticiones autorizadas y egresos vinculados.
+
+La prueba de integración incluye dos procesos PHP concurrentes para demostrar que no se cobra más que el saldo y que cada pago genera un solo ingreso.
 
 ## Selección de catálogos en ventana
 
@@ -121,3 +190,12 @@ php -d extension_dir=C:\AppServ\php7\ext -d extension=php_pdo_mysql.dll scripts/
 ```
 
 El manifiesto está en scripts/datos_demo.json. Se consultaron como referencia informativa los catálogos de [biometría hemática](https://www.mayocliniclabs.com/test-catalog/Overview/42120) y [TSH](https://prd1.mayocliniclabs.com/test-catalog/Overview/800096) de Mayo Clinic Laboratories; no se importaron sus procedimientos, volúmenes ni valores de referencia.
+
+## Cancelaciones y devoluciones
+En **Caja → Cancelaciones y devoluciones** se revisan las peticiones por estado, con paginación. Desde una solicitud o **Cobros de solicitudes** se pide la cancelación o la devolución parcial/total de un pago, con motivo obligatorio. Recepción y Caja pueden solicitar; solo una cuenta con `autorizar_anulaciones`, `administrar_accesos` y `ver_cobros` puede aprobar o rechazar desde su propia sesión, también con motivo. No se comparte la contraseña del administrador.
+
+Autorizar una cancelación marca la solicitud como cancelada, conserva sus documentos e historial, elimina el saldo por cobrar y bloquea edición, nuevos cobros, captura, corrección, validación, entrega y generación de informes de resultados. Las impresiones de la solicitud llevan aviso de cancelación. La cancelación no entrega dinero: muestra el importe por devolver y las devoluciones se solicitan por separado. También se puede cancelar una cotización desde su detalle.
+
+Una devolución aprobada la registra Caja o Administrador con `devolver_pagos`, `ver_cobros`, `operar_caja` y `registrar_egresos`, en su propio turno abierto, confirmando la entrega. Se conserva el medio del pago original: efectivo reduce el efectivo esperado; tarjeta/transferencia suma egresos no efectivos sin alterar ingresos brutos. El sistema registra la devolución; las reversiones bancarias se realizan por los canales del laboratorio. Si falta efectivo, se bloquea la devolución hasta disponer de fondo suficiente. No se modifican el pago original ni sus cortes cerrados.
+
+Las peticiones pendientes y aprobadas reservan el importe del pago. Rechazarlas libera esa reserva. Los bloqueos transaccionales impiden exceder el pago con peticiones simultáneas; reintentar la ejecución no duplica el egreso, incluso tras cerrar el turno. Se conserva solicitante, autorizador, ejecutor, motivos, fechas, pago y movimiento. El recibo de devolución guarda identidad del laboratorio y responsable al ejecutarse. En solicitudes vigentes, devolver vuelve a generar saldo pendiente; en canceladas se conserva saldo por cobrar cero y disminuye lo pendiente por devolver.

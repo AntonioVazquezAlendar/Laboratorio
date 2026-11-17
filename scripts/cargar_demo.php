@@ -1,10 +1,10 @@
 <?php
 // Carga voluntaria de ejemplos; nunca se ejecuta desde el navegador ni al instalar.
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
-require __DIR__.'/../app/Config/Database.php';
-require __DIR__.'/../app/Helpers/HttpError.php';
-require __DIR__.'/../app/Services/Auth.php';
-require __DIR__.'/../app/Models/Catalogo.php';
+require_once __DIR__.'/../app/Config/Database.php';
+require_once __DIR__.'/../app/Helpers/HttpError.php';
+require_once __DIR__.'/../app/Services/Auth.php';
+require_once __DIR__.'/../app/Models/Catalogo.php';
 
 $db=(new Database())->connect();
 $fixture=json_decode(file_get_contents(__DIR__.'/datos_demo.json'),true,512,JSON_THROW_ON_ERROR);

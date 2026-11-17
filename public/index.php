@@ -13,6 +13,7 @@ require __DIR__.'/../app/Models/Catalogo.php';
 require __DIR__.'/../app/Helpers/Dinero.php';
 require __DIR__.'/../app/Services/Solicitud.php';
 require __DIR__.'/../app/Services/Caja.php';
+require __DIR__.'/../app/Services/Cobro.php';
 require __DIR__.'/../app/Models/Empresa.php';
 Auth::iniciarSesion();
 $path=parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH);
