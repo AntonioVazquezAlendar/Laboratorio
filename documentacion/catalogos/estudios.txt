@@ -1,0 +1,144 @@
+﻿CATÁLOGO: ESTUDIOS
+
+
+
+PARA QUÉ SIRVE
+
+Define los estudios o perfiles que se solicitan al laboratorio. Cada estudio puede reunir varios analitos, un tipo de muestra y un método. Su precio se configura por separado en Precios.
+
+
+
+Ubicación: Menú → Catálogos → Estudios.
+
+Nombre interno del catálogo: estudios.
+
+
+
+CAMPOS DEL FORMULARIO
+
+
+
+1. Código (codigo)
+
+   Para qué sirve: Identificador corto para buscar y distinguir el registro. No se puede repetir dentro de este catálogo.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+2. Nombre (nombre)
+
+   Para qué sirve: Nombre del estudio o perfil que se selecciona al crear una solicitud.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+3. Área (area)
+
+   Para qué sirve: Área o sección del laboratorio a la que pertenece el estudio, por ejemplo, Química clínica. Es texto libre, no un catálogo independiente.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 100 caracteres.
+
+
+
+4. Tipo de muestra (tipo_muestra_id)
+
+   Para qué sirve: Selecciona el tipo de muestra asociado al estudio desde Tipos de muestra.
+
+   Obligatorio: No.
+
+   Tipo: Selección de otro catálogo. 
+
+   Catálogo relacionado: Tipos de muestra.
+
+
+
+5. Método (metodo_id)
+
+   Para qué sirve: Selecciona el método general del estudio. Un analito puede tener su propio método; si no lo tiene, la plantilla de resultados usa el del estudio.
+
+   Obligatorio: No.
+
+   Tipo: Selección de otro catálogo. 
+
+   Catálogo relacionado: Métodos.
+
+
+
+6. Tiempo de entrega (tiempo_entrega)
+
+   Para qué sirve: Descripción del tiempo estimado de entrega. Es texto libre; no calcula una fecha límite ni activa alertas automáticamente.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 100 caracteres.
+
+
+
+7. Indicaciones de preparación (indicaciones)
+
+   Para qué sirve: Instrucciones de preparación del paciente para este estudio. Se conservan al registrar la solicitud y se usan en la orden de trabajo.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 3000 caracteres.
+
+
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+
+
+REGLAS Y RELACIONES IMPORTANTES
+
+
+
+- ANALITOS DEL ESTUDIO (lista adicional del formulario): permite agregar hasta 200 analitos sin repetir y cambiar su orden con el botón Subir. Ese orden se usa en la captura y el informe. La lista puede guardarse vacía, pero no se podrá capturar un resultado estructurado para un estudio sin analitos.
+
+- La relación se guarda en estudio_analitos: estudio_id identifica el estudio; analito_id identifica el analito; orden indica su posición, empezando en 1. Estos tres campos se administran mediante la lista, no se escriben manualmente.
+
+- La muestra, el método, los analitos y el precio se copian al registrar la solicitud. Los cambios posteriores del catálogo no actualizan automáticamente las solicitudes históricas.
+
+- Para crear una solicitud debe existir un precio activo del estudio, público o de convenio.
+
+
+
+Permiso de consulta: ver_catalogos.
+
+Permiso de edición: editar_catalogos (también requiere el de consulta).
+
+
+
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.
+

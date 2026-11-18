@@ -28,6 +28,7 @@ try:
  foreach($d->query('SELECT u.*,r.permisos FROM usuarios u JOIN roles r ON r.id=u.rol_id ORDER BY u.id')->fetchAll() as $u){$out['cuentas'][$u['nombre_usuario']]=array('clave'=>password_verify('Admin1.1',$u['contrasena_hash']),'activo'=>$u['activo'],'cambio'=>$u['cambio_obligatorio'],'permisos'=>json_decode($u['permisos'],true));}
  $out['estados']=$d->query('SELECT estado,COUNT(*) cantidad FROM solicitudes GROUP BY estado')->fetchAll();
  $out['cancelada']=strpos($d->query("SHOW COLUMNS FROM solicitudes LIKE 'estado'")->fetch()['Type'],"'cancelada'")!==false;
+ $out['nacimiento_obligatorio']=$d->query("SHOW COLUMNS FROM pacientes LIKE 'fecha_nacimiento'")->fetch()['Null']==='NO';
  $out['referencias']=$d->query("SHOW COLUMNS FROM analitos LIKE 'referencia_texto'")->fetch()!==false;
  $out['captura']=$d->query("SHOW COLUMNS FROM resultado_versiones LIKE 'datos_analitos'")->fetch()!==false;
  $out['tablas']=count($d->query('SHOW TABLES')->fetchAll());echo json_encode($out);""",env))
@@ -41,6 +42,7 @@ try:
  caja=report['cuentas']['caja']['permisos'];admin=report['cuentas']['admin']['permisos']
  check(caja['cobrar'] and caja['devolver_pagos'] and not caja['autorizar_anulaciones'] and admin['autorizar_anulaciones'],'caja ejecuta devoluciones y administrador autoriza')
  check(report['cuentas']['responsable']['permisos']['validar_resultados'] and not report['cuentas']['recepcion']['permisos']['validar_resultados'],'separacion de captura y validacion clinica')
+ check(report['nacimiento_obligatorio'],'SQL instala fecha de nacimiento obligatoria en pacientes')
  check(report['cancelada'] and report['referencias'] and report['captura'],'incluye columnas agregadas por las migraciones actuales')
  second=run();check(second.returncode!=0 and b'1007' in second.stderr,'reimportar se detiene al existir la base, sin sobrescribirla')
  check(php("require 'app/Config/Database.php';echo (new Database())->connect()->query('SELECT COUNT(*) FROM solicitudes')->fetchColumn();",env)=='3','reimportacion rechazada conserva solicitudes existentes')

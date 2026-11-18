@@ -9,10 +9,23 @@ if(!preg_match('/^laboratorio_[a-z0-9_]+$/D',$name))throw new RuntimeException('
 $server=(new Database())->connect(true);
 $server->exec('CREATE DATABASE IF NOT EXISTS `'.$name.'` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
 $db=(new Database())->connect();
+// No sustituir fechas faltantes por una fecha ficticia al actualizar instalaciones anteriores.
+$q=$db->query("SHOW TABLES LIKE 'pacientes'");
+if($q->fetchColumn()){
+ $missing=(int)$db->query("SELECT COUNT(*) FROM pacientes WHERE fecha_nacimiento IS NULL OR fecha_nacimiento<'1800-01-01'")->fetchColumn();
+ if($missing)throw new RuntimeException('Hay '.$missing.' pacientes sin fecha de nacimiento valida (nula o anterior a 1800-01-01). Completa sus fechas reales antes de aplicar la actualizacion; no se asignaron fechas automaticamente.');
+}
 foreach (glob(__DIR__.'/../app/Migrations/*.sql') as $migration) {
  $sql=file_get_contents($migration);
  foreach (explode(';',$sql) as $statement) { if (trim($statement)!=='') { $db->exec($statement); } }
 }
+$birthColumn=$db->query("SHOW COLUMNS FROM pacientes LIKE 'fecha_nacimiento'")->fetch();
+$birthChanges=array();
+if($birthColumn['Null']==='YES')$birthChanges[]='MODIFY fecha_nacimiento DATE NOT NULL';
+$birthCheck=$db->query("SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA=DATABASE() AND TABLE_NAME='pacientes' AND CONSTRAINT_NAME='ck_paciente_fecha_nacimiento' AND CONSTRAINT_TYPE='CHECK'")->fetchColumn();
+// Impedir tambien la fecha cero que MySQL permisivo puede sustituir por un NULL.
+if(!$birthCheck)$birthChanges[]="ADD CONSTRAINT ck_paciente_fecha_nacimiento CHECK (fecha_nacimiento >= '1800-01-01')";
+if($birthChanges)$db->exec('ALTER TABLE pacientes '.implode(',',$birthChanges));
 $columns=$db->query("SHOW COLUMNS FROM resultados LIKE 'solicitud_id'")->fetchAll();
 if (!$columns) { $db->exec('ALTER TABLE resultados ADD solicitud_id BIGINT UNSIGNED NULL, ADD estudio_id BIGINT UNSIGNED NULL, ADD UNIQUE KEY uq_resultado_solicitud_estudio(solicitud_id,estudio_id), ADD FOREIGN KEY(solicitud_id) REFERENCES solicitudes(id), ADD FOREIGN KEY(estudio_id) REFERENCES estudios(id)'); }
 foreach (array(

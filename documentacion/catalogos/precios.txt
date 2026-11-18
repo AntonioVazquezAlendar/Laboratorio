@@ -1,0 +1,97 @@
+﻿CATÁLOGO: PRECIOS
+
+
+
+PARA QUÉ SIRVE
+
+Establece el importe de cada estudio para público general o para una compañía. Estas tarifas se usan al calcular nuevas solicitudes o cotizaciones.
+
+
+
+Ubicación: Menú → Catálogos → Precios.
+
+Nombre interno del catálogo: precios.
+
+
+
+CAMPOS DEL FORMULARIO
+
+
+
+1. Estudio (estudio_id)
+
+   Para qué sirve: Estudio al que corresponde esta tarifa, seleccionado desde Estudios.
+
+   Obligatorio: Sí.
+
+   Tipo: Selección de otro catálogo. 
+
+   Catálogo relacionado: Estudios.
+
+
+
+2. Compañía (compania_id)
+
+   Para qué sirve: Compañía a la que corresponde la tarifa. Si queda vacío, el precio es para Público general.
+
+   Obligatorio: No.
+
+   Tipo: Selección de otro catálogo. 
+
+   Catálogo relacionado: Compañías.
+
+
+
+3. Precio (MXN) (importe)
+
+   Para qué sirve: Importe del estudio en pesos mexicanos (MXN). Debe ser un número no negativo, con un máximo de dos decimales; admite precio cero.
+
+   Obligatorio: Sí.
+
+   Tipo: Importe monetario. 
+
+
+
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+
+
+REGLAS Y RELACIONES IMPORTANTES
+
+
+
+- Solo existe un registro por combinación estudio/compañía, incluso si está inactivo. Para cambiarlo se edita el existente.
+
+- Una compañía vacía representa la tarifa pública. Si una solicitud tiene compañía y existe una tarifa activa de convenio, se usa esa tarifa; en su ausencia se busca la pública activa. Si no hay ninguna aplicable, se impide guardar la solicitud.
+
+- El formato admitido es 150 o 150.50, sin separadores de miles, con hasta diez dígitos enteros y dos decimales. Máximo: 9,999,999,999.99 MXN.
+
+- Campos adicionales de sistema: moneda guarda MXN; compania_ambito se calcula automáticamente como el ID de la compañía o 0 para público general. No se capturan en el formulario.
+
+- Editar una tarifa no cambia automáticamente el precio histórico de las solicitudes existentes.
+
+
+
+Permiso de consulta: ver_precios.
+
+Permiso de edición: editar_precios (también requiere el de consulta).
+
+
+
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.
+

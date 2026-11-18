@@ -4,15 +4,18 @@ const mobileMenu=window.matchMedia('(max-width:900px)');
 function setNavigation(open,restoreFocus=false){
  const sidebar=$('#app-sidebar'),enabled=!sidebar.hidden;
  open=enabled&&open;document.body.classList.toggle('menu-open',open);
- $('#menu-toggle').setAttribute('aria-expanded',String(open));$('#menu-toggle').setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');
+ $('#menu-toggle').title=open?'Cerrar menú':'Abrir menú';$('#menu-toggle').setAttribute('aria-expanded',String(open));$('#menu-toggle').setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');
  sidebar.inert=!open;$('#menu-backdrop').hidden=!open||!mobileMenu.matches;
- const modal=open&&mobileMenu.matches;$('#main-content').inert=modal;$('#session').inert=modal;$('.brand').inert=modal;
+ const modal=open&&mobileMenu.matches;$('#main-content').inert=modal;$('#session').inert=modal;const brand=$('.brand');brand.inert=modal&&!sidebar.contains(brand);
  if(modal){sidebar.setAttribute('role','dialog');sidebar.setAttribute('aria-modal','true');}else{sidebar.removeAttribute('role');sidebar.removeAttribute('aria-modal');}
  document.body.classList.toggle('menu-modal',modal);
  if(!mobileMenu.matches&&enabled){try{localStorage.setItem('lab_menu_open',String(open));}catch{}}
  if(restoreFocus)$('#menu-toggle').focus();
 }
 function syncNavigation(enabled){
+ const brand=$('.brand'),destination=enabled?$('#sidebar-brand'):$('#header-brand');
+ if(brand.parentElement!==destination)destination.append(brand);
+ $('#header-welcome').hidden=!enabled;
  document.body.classList.toggle('has-navigation',enabled);$('#menu-toggle').hidden=!enabled;$('#app-sidebar').hidden=!enabled;
  let desktopOpen=true;try{desktopOpen=localStorage.getItem('lab_menu_open')!=='false';}catch{}
  setNavigation(enabled&&!mobileMenu.matches&&desktopOpen);
@@ -26,13 +29,24 @@ document.addEventListener('keydown',e=>{
  if(document.querySelector('dialog[open]'))return;
  if(!document.body.classList.contains('menu-open'))return;
  if(e.key==='Escape'){e.preventDefault();setNavigation(false,true);return;}
- if(e.key==='Tab'&&mobileMenu.matches){const list=[...$('#app-sidebar').querySelectorAll('button')].filter(b=>!b.disabled&&b.getClientRects().length);const first=list[0],last=list.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+ if(e.key==='Tab'&&mobileMenu.matches){const list=[...$('#app-sidebar').querySelectorAll('button,summary,a[href]')].filter(b=>!b.disabled&&b.getClientRects().length&&(b.matches('summary')||b.closest('.nav-group')?.open!==false));const first=list[0],last=list.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
 });
 function applyBrand(config){
  brandConfig=config;$('#brand-name').textContent=config.nombre_comercial;$('#brand-footer').textContent=config.nombre_comercial+' · Administración del laboratorio';
- $('#brand-logo').hidden=!config.logo_url;if(config.logo_url)$('#brand-logo').src=config.logo_url;else $('#brand-logo').removeAttribute('src');
+ $('#brand-logo-button').hidden=!config.logo_url;$('#brand-logo').hidden=!config.logo_url;if(config.logo_url)$('#brand-logo').src=config.logo_url;else $('#brand-logo').removeAttribute('src');
  document.title=($('#page-title').textContent||'Acceso')+' · '+config.nombre_comercial;
 }
+const logoDialog=$('#brand-logo-dialog');
+$('#brand-logo-button').onclick=()=>{
+ if(!brandConfig?.logo_url)return;
+ $('#brand-logo-dialog-title').textContent=brandConfig.nombre_comercial+' · Logo';
+ $('#brand-logo-fullsize').src=brandConfig.logo_url;
+ $('#brand-logo-fullsize').alt='Logo de '+brandConfig.nombre_comercial;
+ document.body.classList.add('logo-preview-open');logoDialog.showModal();
+};
+$('#brand-logo-close').onclick=()=>logoDialog.close();
+logoDialog.addEventListener('close',()=>document.body.classList.remove('logo-preview-open'));
+logoDialog.addEventListener('click',event=>{if(event.target!==logoDialog)return;const rect=logoDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)logoDialog.close();});
 function printBrand(config){const c=config||brandConfig;return (c.logo_url?`<img class="print-logo" src="${esc(c.logo_url)}" alt="">`:'')+`<h1>${esc(c.nombre_comercial)}</h1>`+
  `<p class="print-contact">${[c.razon_social,c.rfc?'RFC: '+c.rfc:'',c.direccion,c.codigo_postal?'C.P. '+c.codigo_postal:'',c.telefono,c.correo,c.sitio_web].filter(Boolean).map(esc).join('<br>')}</p>`+(c.encabezado_ticket?'<p>'+esc(c.encabezado_ticket)+'</p>':'');}
 function printFooter(config){const c=config||brandConfig;return c.pie_ticket?'<p class="print-footer">'+esc(c.pie_ticket)+'</p>':'';}

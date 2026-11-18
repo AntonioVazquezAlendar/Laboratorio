@@ -26,18 +26,25 @@ async function refresh(){
  const state=await api('sesion');const brand=await api('empresa');applyBrand(brand);csrf=state.csrf;user=state.usuario;setup=state.configuracion_inicial;
  $('#session').hidden=!user;$('#navigation').hidden=!user||!!user.cambio_obligatorio;syncNavigation(!$('#navigation').hidden);
  if(!user){document.title='Acceso · '+brandConfig.nombre_comercial;view('access');$('#login-form').hidden=setup&&!state.configuracion_local;$('#setup-name').hidden=!setup;$('#setup-name input').required=setup;$('#setup-help').hidden=!setup;$('#login-title').textContent=setup?'Crear administrador':'Iniciar sesión';$('#login-submit').textContent=setup?'Crear cuenta':'Entrar';$('#show-login-password').checked=false;$('#login-form input[name=contrasena]').type='password';$('#login-form input[name=contrasena]').autocomplete=setup?'new-password':'current-password';status(setup&&!state.configuracion_local?'Crea la primera cuenta desde el navegador del servidor.':'');return;}
- $('#identity').textContent=user.nombre+' · '+user.rol_nombre;
+ $('#header-welcome').textContent='Bienvenido, '+user.nombre;
+ $('#identity').textContent=user.cambio_obligatorio?user.nombre+' · '+user.rol_nombre:user.rol_nombre;
  if(user.cambio_obligatorio){passwordView(true);return;}
  definitions=await api('catalogos');
  const items=[['inicio','Inicio',true],['usuarios','Usuarios',can('administrar_accesos')],['roles','Roles y permisos',can('administrar_accesos')],['resultados','Resultados',can('ver_resultados')],['bitacora','Bitácora',can('ver_bitacora')],['identidad','Identidad del laboratorio',can('administrar_accesos')]];
  const reception=[['nuevo','Nuevo ingreso','crear_ordenes'],['captura','Captura de resultados','capturar_resultados'],['entrega','Entrega de resultados','entregar_resultados'],['cotizaciones','Cotización','cotizar'],['ordenes','Orden de trabajo','imprimir_solicitudes'],['editar','Editar solicitud','editar_solicitudes'],['comprobantes','Imprimir comprobante','imprimir_solicitudes'],['historial','Historial del paciente','ver_pacientes']];
- $('#navigation').innerHTML='<h2 class="nav-heading">Recepción</h2>'+reception.filter(i=>can(i[2])&&can('ver_ordenes')).map(i=>`<button data-nav="recepcion:${i[0]}">${i[1]}</button>`).join('')+(can('operar_caja')||can('ver_cobros')?'<h2 class="nav-heading">Caja</h2>'+(can('ver_cobros')?'<button data-nav="cobros">Cobros de solicitudes</button><button data-nav="anulaciones">Cancelaciones y devoluciones</button>':'')+(can('operar_caja')?[['ingresos','Ingresos'],['egresos','Egresos'],['corte','Corte de caja']].map(i=>`<button data-nav="caja:${i[0]}">${i[1]}</button>`).join(''):''):'')+'<h2 class="nav-heading">Sistema</h2>'+items.filter(i=>i[2]).map(i=>`<button data-nav="${i[0]}">${i[1]}</button>`).join('')+'<h2 class="nav-heading">Catálogos</h2>'+Object.entries(definitions).map(([k,d])=>`<button data-nav="catalogo:${k}">${esc(d.title)}</button>`).join('');
- for(const heading of document.querySelectorAll('#navigation .nav-heading'))if(!heading.nextElementSibling||heading.nextElementSibling.matches('.nav-heading'))heading.remove();
- for(const b of document.querySelectorAll('[data-nav]'))b.onclick=()=>run(()=>navigate(b.dataset.nav));
+ const cash=[];
+ if(can('ver_cobros'))cash.push(['cobros','Cobros de solicitudes'],['anulaciones','Cancelaciones y devoluciones']);
+ if(can('operar_caja'))cash.push(['caja:ingresos','Ingresos'],['caja:egresos','Egresos'],['caja:corte','Corte de caja']);
+ renderNavigation([
+  {key:'recepcion',label:'Recepción',icon:'clipboard',items:reception.filter(i=>can(i[2])&&can('ver_ordenes')).map(i=>['recepcion:'+i[0],i[1]])},
+  {key:'caja',label:'Caja',icon:'wallet',items:cash},
+  {key:'sistema',label:'Sistema',icon:'settings',items:items.filter(i=>i[2]).map(i=>[i[0],i[1]])},
+  {key:'catalogos',label:'Catálogos',icon:'layers',items:Object.entries(definitions).map(([key,d])=>['catalogo:'+key,d.title])}
+ ]);
  await navigate('inicio');status('');
 }
 async function navigate(page){
- current=page;closeNavigationForPage();view('workspace');for(const b of document.querySelectorAll('[data-nav]')){if(b.dataset.nav===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');}
+ current=page;closeNavigationForPage();view('workspace');for(const b of document.querySelectorAll('[data-nav]')){if(b.dataset.nav===page){b.setAttribute('aria-current','page');const group=b.closest('.nav-group');if(group)group.open=true;}else b.removeAttribute('aria-current');}
  $('#content').replaceChildren();status('Cargando…');
  if(page==='inicio'){
   title('Bienvenido, '+user.nombre,'Tu sesión tiene el rol '+user.rol_nombre+'.');

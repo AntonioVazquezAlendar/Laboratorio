@@ -1,0 +1,104 @@
+﻿CATÁLOGO: TIPOS DE MUESTRA
+
+
+
+PARA QUÉ SIRVE
+
+Define las clases de muestras que se vinculan a los estudios, junto con su recipiente e indicaciones de recolección. Es un catálogo de configuración; todavía no registra la recepción o el rechazo de muestras individuales.
+
+
+
+Ubicación: Menú → Catálogos → Tipos de muestra.
+
+Nombre interno del catálogo: tipos_muestra.
+
+
+
+CAMPOS DEL FORMULARIO
+
+
+
+1. Código (codigo)
+
+   Para qué sirve: Identificador corto para buscar y distinguir el registro. No se puede repetir dentro de este catálogo.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+2. Nombre (nombre)
+
+   Para qué sirve: Nombre de la clase de muestra que se seleccionará en el estudio.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+3. Recipiente (recipiente)
+
+   Para qué sirve: Descripción del recipiente o contenedor indicado para esta clase de muestra. Es texto libre; no administra existencias de recipientes.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+4. Indicaciones de recolección (indicaciones)
+
+   Para qué sirve: Indicaciones generales para recolectar este tipo de muestra. No equivale al registro de una toma real.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 3000 caracteres.
+
+
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+
+
+REGLAS Y RELACIONES IMPORTANTES
+
+
+
+- No se puede desactivar un tipo de muestra vinculado a estudios activos sin retirar antes esas asociaciones.
+
+- Las indicaciones del tipo de muestra y las de preparación del estudio son campos distintos. La orden de trabajo actual usa las indicaciones del estudio, junto con el nombre de la muestra y el recipiente.
+
+
+
+Permiso de consulta: ver_catalogos.
+
+Permiso de edición: editar_catalogos (también requiere el de consulta).
+
+
+
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.
+

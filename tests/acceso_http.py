@@ -160,6 +160,16 @@ try:
  company=create('companias',{'codigo':'C-QA','nombre':'Compañía QA','correo':'contacto@example.test'})
  doctor=create('medicos',{'codigo':'D-QA','nombre':'Médico','apellidos':'Ficticio','cedula':'QA123'})
  patient=create('pacientes',{'nombre':'Paciente','apellidos':'Ficticio','fecha_nacimiento':'2000-02-29','sexo':'no_especificado','medico_id':doctor['id'],'compania_id':company['id']})
+ definitions=admin.call('catalogos');check(definitions['pacientes']['fields']['fecha_nacimiento']['required'],'interfaz de pacientes y alta desde selector marcan nacimiento obligatorio')
+ birth_base={'nombre':'QA','apellidos':'Fecha obligatoria','sexo':'no_especificado'}
+ admin.call('catalogos/pacientes','POST',birth_base,code=422)
+ for missing_birth in ['',None]:
+  admin.call('catalogos/pacientes','POST',dict(birth_base,fecha_nacimiento=missing_birth),code=422)
+  current_patient=admin.call('catalogos/pacientes/'+str(patient['id']))
+  admin.call('catalogos/pacientes/'+str(patient['id']),'PUT',dict(current_patient,fecha_nacimiento=missing_birth),code=422)
+ check(admin.call('catalogos/pacientes/'+str(patient['id']))['fecha_nacimiento']=='2000-02-29','intentar vaciar nacimiento no modifica el paciente')
+ birth_sql="require 'app/Config/Database.php';$d=(new Database())->connect();try{$d->exec('UPDATE pacientes SET fecha_nacimiento=NULL WHERE id="+str(patient['id'])+"');echo 'aceptado';}catch(PDOException $e){echo 'rechazado:'.$e->getCode();}"
+ check(subprocess.check_output(CMD+['-r',birth_sql],cwd=ROOT,env=env,text=True).strip().startswith('rechazado:'),'base de datos rechaza NULL aunque se omita la API o MySQL sea permisivo')
  price=create('precios',{'estudio_id':study['id'],'importe':'120.50'})
  convened=create('precios',{'estudio_id':study['id'],'compania_id':company['id'],'importe':'99.99'})
  admin.call('catalogos/precios','POST',{'estudio_id':study['id'],'importe':'22.00'},code=409)
@@ -299,7 +309,7 @@ try:
  check(len(linked_moves)==3 and all(str(m['solicitud_id'])==str(pid) for m in linked_moves),'cada pago enlaza exactamente un movimiento del turno')
  detail=admin.call('solicitudes/'+str(pid));check(detail['cobros']['saldo']=='40.25','solicitud muestra saldo acumulado de anticipos y abonos')
  # Editing a paid request cannot change its patient or lower its total below collected amounts.
- other_patient=create('pacientes',{'nombre':'Otro paciente','apellidos':'Ficticio','sexo':'no_especificado'})
+ other_patient=create('pacientes',{'nombre':'Otro paciente','apellidos':'Ficticio','fecha_nacimiento':'1990-06-15','sexo':'no_especificado'})
  admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':detail['version'],'paciente_id':other_patient['id'],'estudios':[study['id']]},code=409)
  admin.call('solicitudes/'+str(pid),'PUT',{'estado':'registrada','version':detail['version'],'paciente_id':patient['id'],'estudios':[qs['id']]},code=409)
  caja.call('caja/cerrar','POST',{'version':initial_turn_version,'contado':'147.35'},code=409)
@@ -447,8 +457,18 @@ try:
  check(caja.call('caja')['historial'][0]['resumen']['devoluciones_solicitudes']=='180.50','corte guarda devoluciones y reintento después del cierre no modifica el corte')
  caja.call('caja/abrir','POST',{'fondo':'0.00'})
 
+ # Legacy databases must complete real birth dates before changing column nullability.
+ legacy_birth="require 'app/Config/Database.php';$d=(new Database())->connect();$d->exec('ALTER TABLE pacientes MODIFY fecha_nacimiento DATE NULL');$d->exec('UPDATE pacientes SET fecha_nacimiento=NULL WHERE id="+str(patient['id'])+"');"
+ subprocess.run(CMD+['-r',legacy_birth],cwd=ROOT,env=env,check=True,capture_output=True)
+ refused_birth=subprocess.run(CMD+[str(ROOT/'scripts/instalar.php')],env=env,capture_output=True)
+ check(refused_birth.returncode!=0 and b'sin fecha de nacimiento' in (refused_birth.stdout+refused_birth.stderr),'actualizacion se detiene si existen pacientes sin nacimiento')
+ birth_state="require 'app/Config/Database.php';$d=(new Database())->connect();echo $d->query(\"SHOW COLUMNS FROM pacientes LIKE 'fecha_nacimiento'\")->fetch()['Null'].':'.$d->query('SELECT COUNT(*) FROM pacientes WHERE fecha_nacimiento IS NULL')->fetchColumn();"
+ check(subprocess.check_output(CMD+['-r',birth_state],cwd=ROOT,env=env,text=True).strip()=='YES:1','migracion rechazada no inventa ni sustituye fechas faltantes')
+ restore_birth="require 'app/Config/Database.php';$d=(new Database())->connect();$d->prepare('UPDATE pacientes SET fecha_nacimiento=? WHERE id=?')->execute(array('2000-02-29',"+str(patient['id'])+"));"
+ subprocess.run(CMD+['-r',restore_birth],cwd=ROOT,env=env,check=True,capture_output=True)
  # Install reruns preserve records and customized permissions.
  subprocess.run(CMD+[str(ROOT/'scripts/instalar.php')],env=env,check=True,capture_output=True)
+ check(subprocess.check_output(CMD+['-r',birth_state],cwd=ROOT,env=env,text=True).strip()=='NO:0','al completar fechas reales la columna pasa a NOT NULL')
  check(get('pacientes',patient['id'])['codigo']==p_row['codigo'],'migración repetible conserva pacientes')
 
 

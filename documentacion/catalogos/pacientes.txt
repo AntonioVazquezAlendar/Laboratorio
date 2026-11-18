@@ -1,0 +1,150 @@
+﻿CATÁLOGO: PACIENTES
+
+PARA QUÉ SIRVE
+
+Identifica a los pacientes y reúne sus datos de contacto y relaciones con médicos y compañías. El expediente permite localizar sus solicitudes y consultar su historial según los permisos del usuario.
+
+Ubicación: Menú → Catálogos → Pacientes.
+
+Nombre interno del catálogo: pacientes.
+
+CAMPOS DEL FORMULARIO
+
+1. Expediente (codigo)
+
+   Para qué sirve: Número o código de expediente, único dentro de Pacientes. Si se deja vacío al crear, se genera un código PAC- automáticamente. No es el mismo campo que el ID interno.
+
+   Obligatorio: No.
+
+   Tipo: Texto.
+
+   Longitud máxima: 30 caracteres.
+
+2. Nombre(s) (nombre)
+
+   Para qué sirve: Nombre o nombres del paciente.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto.
+
+   Longitud máxima: 150 caracteres.
+
+3. Apellidos (apellidos)
+
+   Para qué sirve: Apellidos de la persona.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto.
+
+   Longitud máxima: 150 caracteres.
+
+4. Fecha de nacimiento (fecha_nacimiento)
+   Para qué sirve: Identifica la fecha de nacimiento del paciente y se conserva en el contexto de las solicitudes e informes. No selecciona automáticamente rangos de referencia por edad.
+   Obligatorio: Sí, al crear y editar pacientes, tanto en el catálogo como en el alta desde el selector.
+   Tipo en la interfaz: Fecha, con validación de campo obligatorio.
+   Tipo en la base de datos: DATE NOT NULL.
+   Formato de almacenamiento: AAAA-MM-DD (ejemplo de formato: 2000-02-29).
+   Validación de la API: debe ser una fecha real entre 1800-01-01 y el día actual; no acepta valores vacíos, nulos ni fechas futuras.
+   Protección de la base de datos: no permite NULL ni fechas anteriores a 1800-01-01, incluida la fecha cero 0000-00-00.
+   No se genera ni se asigna una fecha de nacimiento automáticamente.
+
+5. Sexo registrado (sexo)
+
+   Para qué sirve: Sexo registrado del paciente. Se conserva en el contexto de los informes; actualmente no selecciona automáticamente valores de referencia.
+
+   Obligatorio: Sí.
+
+   Tipo: Lista de opciones.
+
+   Opciones: No especificado (no_especificado); Femenino (femenino); Masculino (masculino); Otro (otro).
+
+6. Teléfono (telefono)
+
+   Para qué sirve: Número telefónico de contacto; se conserva como texto para permitir prefijos y extensiones.
+
+   Obligatorio: No.
+
+   Tipo: Texto de contacto telefónico.
+
+   Longitud máxima: 30 caracteres.
+
+7. Correo (correo)
+
+   Para qué sirve: Dirección de correo para contacto. Si se captura, el sistema valida su formato; guardar el correo no envía mensajes automáticamente.
+
+   Obligatorio: No.
+
+   Tipo: Correo electrónico.
+
+   Longitud máxima: 150 caracteres.
+
+8. Dirección (direccion)
+
+   Para qué sirve: Dirección de contacto del registro.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas.
+
+   Longitud máxima: 500 caracteres.
+
+9. Médico referente (medico_id)
+
+   Para qué sirve: Médico referente asociado al paciente, seleccionado desde Médicos.
+
+   Obligatorio: No.
+
+   Tipo: Selección de otro catálogo.
+
+   Catálogo relacionado: Médicos.
+
+10. Compañía (compania_id)
+
+   Para qué sirve: Compañía asociada al paciente. La tarifa aplicada a cada solicitud depende de la compañía seleccionada en esa solicitud.
+
+   Obligatorio: No.
+
+   Tipo: Selección de otro catálogo.
+
+   Catálogo relacionado: Compañías.
+
+11. Notas (notas)
+
+   Para qué sirve: Observaciones adicionales del registro. No sustituye campos específicos, resultados clínicos ni motivos de cancelación.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas.
+
+   Longitud máxima: 3000 caracteres.
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+REGLAS Y RELACIONES IMPORTANTES
+
+- La fecha es obligatoria en la interfaz, la API y la base de datos (DATE NOT NULL). Se guarda en formato AAAA-MM-DD; debe ser una fecha válida entre 1800-01-01 y el día actual.
+
+- El historial se consulta a través de las solicitudes del paciente. Los resultados no se capturan en el catálogo de pacientes.
+
+- El sistema restringe las consultas y la edición según los permisos del rol.
+
+Permiso de consulta: ver_pacientes.
+
+Permiso de edición: editar_pacientes (también requiere el de consulta).
+
+Actualizado: 18 de noviembre de 2026.
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.

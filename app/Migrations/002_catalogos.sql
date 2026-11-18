@@ -33,13 +33,14 @@ CREATE TABLE IF NOT EXISTS medicos (
 CREATE TABLE IF NOT EXISTS pacientes (
  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY, codigo VARCHAR(30) NOT NULL UNIQUE,
  nombre VARCHAR(150) NOT NULL, apellidos VARCHAR(150) NOT NULL,
- fecha_nacimiento DATE NULL, sexo ENUM('femenino','masculino','otro','no_especificado') NOT NULL DEFAULT 'no_especificado',
+ fecha_nacimiento DATE NOT NULL, sexo ENUM('femenino','masculino','otro','no_especificado') NOT NULL DEFAULT 'no_especificado',
  telefono VARCHAR(30) NOT NULL DEFAULT '', correo VARCHAR(150) NOT NULL DEFAULT '', direccion VARCHAR(500) NOT NULL DEFAULT '',
  medico_id BIGINT UNSIGNED NULL, compania_id BIGINT UNSIGNED NULL, notas TEXT NOT NULL,
  activo TINYINT(1) NOT NULL DEFAULT 1, version INT UNSIGNED NOT NULL DEFAULT 1,
  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
  actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  FOREIGN KEY (medico_id) REFERENCES medicos(id), FOREIGN KEY (compania_id) REFERENCES companias(id),
+ CONSTRAINT ck_paciente_fecha_nacimiento CHECK (fecha_nacimiento >= '1800-01-01'),
  KEY ix_paciente_nombre(apellidos,nombre)
 ) ENGINE=InnoDB;
 CREATE TABLE IF NOT EXISTS analitos (

@@ -1,0 +1,164 @@
+﻿CATÁLOGO: MÉDICOS
+
+
+
+PARA QUÉ SIRVE
+
+Registra a los médicos referentes que pueden asociarse a pacientes y solicitudes. Sus datos identifican al médico en la operación del laboratorio y en los documentos correspondientes.
+
+
+
+Ubicación: Menú → Catálogos → Médicos.
+
+Nombre interno del catálogo: medicos.
+
+
+
+CAMPOS DEL FORMULARIO
+
+
+
+1. Código (codigo)
+
+   Para qué sirve: Identificador corto para buscar y distinguir el registro. No se puede repetir dentro de este catálogo.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+2. Nombre(s) (nombre)
+
+   Para qué sirve: Nombre o nombres del médico.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+3. Apellidos (apellidos)
+
+   Para qué sirve: Apellidos de la persona.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+4. Cédula profesional (cedula)
+
+   Para qué sirve: Cédula profesional capturada como texto. Este campo no consulta ni verifica automáticamente un registro externo.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+5. Especialidad (especialidad)
+
+   Para qué sirve: Especialidad del médico, capturada como texto libre.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+6. Teléfono (telefono)
+
+   Para qué sirve: Número telefónico de contacto; se conserva como texto para permitir prefijos y extensiones.
+
+   Obligatorio: No.
+
+   Tipo: Texto de contacto telefónico. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+7. Correo (correo)
+
+   Para qué sirve: Dirección de correo para contacto. Si se captura, el sistema valida su formato; guardar el correo no envía mensajes automáticamente.
+
+   Obligatorio: No.
+
+   Tipo: Correo electrónico. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+8. Dirección (direccion)
+
+   Para qué sirve: Dirección de contacto del registro.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 500 caracteres.
+
+
+
+9. Notas (notas)
+
+   Para qué sirve: Observaciones adicionales del registro. No sustituye campos específicos, resultados clínicos ni motivos de cancelación.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 3000 caracteres.
+
+
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+
+
+REGLAS Y RELACIONES IMPORTANTES
+
+
+
+- Apellidos y especialidad son opcionales en la versión actual.
+
+- El código es único en Médicos; la cédula no tiene una restricción de unicidad en la base actual.
+
+
+
+Permiso de consulta: ver_medicos.
+
+Permiso de edición: editar_medicos (también requiere el de consulta).
+
+
+
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.
+

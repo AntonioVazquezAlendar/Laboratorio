@@ -1,0 +1,154 @@
+﻿CATÁLOGO: ANALITOS
+
+
+
+PARA QUÉ SIRVE
+
+Define los parámetros que se capturan dentro de un estudio: nombre, tipo de resultado, unidad, precisión, método y texto de referencia. Un analito puede utilizarse en varios estudios.
+
+
+
+Ubicación: Menú → Catálogos → Analitos.
+
+Nombre interno del catálogo: analitos.
+
+
+
+CAMPOS DEL FORMULARIO
+
+
+
+1. Código (codigo)
+
+   Para qué sirve: Identificador corto para buscar y distinguir el registro. No se puede repetir dentro de este catálogo.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+2. Nombre (nombre)
+
+   Para qué sirve: Nombre del parámetro que aparecerá en la captura de resultados y en el informe.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+3. Unidad (unidad)
+
+   Para qué sirve: Unidad en la que se expresa el resultado. Se muestra junto al valor; el sistema no convierte unidades automáticamente.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 40 caracteres.
+
+
+
+4. Tipo de resultado (tipo_resultado)
+
+   Para qué sirve: Determina la forma de captura: número, resultado cualitativo o texto libre.
+
+   Obligatorio: Sí.
+
+   Tipo: Lista de opciones. 
+
+   Opciones: Numérico (numerico); Cualitativo (cualitativo); Texto (texto).
+
+
+
+5. Decimales (decimales)
+
+   Para qué sirve: Cantidad máxima de decimales aceptados para un resultado numérico. El sistema rechaza una precisión mayor; no redondea silenciosamente. En resultados cualitativos o de texto no limita el contenido.
+
+   Obligatorio: Sí.
+
+   Tipo: Número entero. 
+
+   Rango: 0 a 6; valor inicial: 2.
+
+
+
+6. Método (metodo_id)
+
+   Para qué sirve: Método específico del analito. Si queda vacío, la plantilla usa el método guardado con el estudio.
+
+   Obligatorio: No.
+
+   Tipo: Selección de otro catálogo. 
+
+   Catálogo relacionado: Métodos.
+
+
+
+7. Valores de referencia (definidos por el laboratorio) (referencia_texto)
+
+   Para qué sirve: Texto de referencia configurado por el laboratorio, que se muestra en la captura y el informe. Actualmente no selecciona rangos por edad/sexo ni marca automáticamente resultados fuera de rango.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 1000 caracteres.
+
+
+
+8. Notas (notas)
+
+   Para qué sirve: Observaciones adicionales del registro. No sustituye campos específicos, resultados clínicos ni motivos de cancelación.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 3000 caracteres.
+
+
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+
+
+REGLAS Y RELACIONES IMPORTANTES
+
+
+
+- Los textos de referencia deben ser definidos por el laboratorio. Este documento no proporciona rangos clínicos.
+
+- Un analito asociado a estudios activos no puede desactivarse hasta retirar esas asociaciones.
+
+- Las solicitudes y versiones de resultados conservan la configuración histórica; editar el catálogo no corrige resultados ya guardados.
+
+
+
+Permiso de consulta: ver_catalogos.
+
+Permiso de edición: editar_catalogos (también requiere el de consulta).
+
+
+
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.
+

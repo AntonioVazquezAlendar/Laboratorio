@@ -26,7 +26,7 @@ class Catalogo
                 'metodo_id'=>$method,'referencia_texto'=>self::f('Valores de referencia (definidos por el laboratorio)','textarea',false,1000),'notas'=>$notes),'columns'=>array('codigo'=>'Código','nombre'=>'Analito','unidad'=>'Unidad','tipo_resultado'=>'Tipo')),
             'pacientes'=>array('title'=>'Pacientes','singular'=>'paciente','view'=>'ver_pacientes','edit'=>'editar_pacientes','fields'=>array_merge(array(
                 'codigo'=>self::f('Expediente','text',false,30),'nombre'=>self::f('Nombre(s)','text',true),
-                'apellidos'=>self::f('Apellidos','text',true),'fecha_nacimiento'=>self::f('Fecha de nacimiento','date'),
+                'apellidos'=>self::f('Apellidos','text',true),'fecha_nacimiento'=>self::f('Fecha de nacimiento','date',true),
                 'sexo'=>self::f('Sexo registrado','select',true,0,array('options'=>array('no_especificado'=>'No especificado','femenino'=>'Femenino','masculino'=>'Masculino','otro'=>'Otro')))),
                 $contact,array('direccion'=>$address,'medico_id'=>self::f('Médico referente','relation',false,0,array('source'=>'medicos')),
                 'compania_id'=>self::f('Compañía','relation',false,0,array('source'=>'companias')),'notas'=>$notes)),

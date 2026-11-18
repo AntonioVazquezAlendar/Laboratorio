@@ -1,0 +1,164 @@
+﻿CATÁLOGO: COMPAÑÍAS
+
+
+
+PARA QUÉ SIRVE
+
+Registra empresas, aseguradoras o instituciones asociadas a pacientes y tarifas de convenio. Los importes de cada estudio por compañía se capturan en Precios.
+
+
+
+Ubicación: Menú → Catálogos → Compañías.
+
+Nombre interno del catálogo: companias.
+
+
+
+CAMPOS DEL FORMULARIO
+
+
+
+1. Código (codigo)
+
+   Para qué sirve: Identificador corto para buscar y distinguir el registro. No se puede repetir dentro de este catálogo.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+2. Nombre (nombre)
+
+   Para qué sirve: Nombre comercial o identificador visible de la compañía.
+
+   Obligatorio: Sí.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+3. Razón social (razon_social)
+
+   Para qué sirve: Denominación o razón social de la compañía para su identificación administrativa.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 200 caracteres.
+
+
+
+4. RFC (rfc)
+
+   Para qué sirve: RFC de la compañía, capturado como texto. Este dato no genera facturas ni realiza una validación fiscal externa.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 13 caracteres.
+
+
+
+5. Persona de contacto (contacto)
+
+   Para qué sirve: Nombre de la persona de contacto en la compañía.
+
+   Obligatorio: No.
+
+   Tipo: Texto. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+6. Teléfono (telefono)
+
+   Para qué sirve: Número telefónico de contacto; se conserva como texto para permitir prefijos y extensiones.
+
+   Obligatorio: No.
+
+   Tipo: Texto de contacto telefónico. 
+
+   Longitud máxima: 30 caracteres.
+
+
+
+7. Correo (correo)
+
+   Para qué sirve: Dirección de correo para contacto. Si se captura, el sistema valida su formato; guardar el correo no envía mensajes automáticamente.
+
+   Obligatorio: No.
+
+   Tipo: Correo electrónico. 
+
+   Longitud máxima: 150 caracteres.
+
+
+
+8. Dirección (direccion)
+
+   Para qué sirve: Dirección de contacto del registro.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 500 caracteres.
+
+
+
+9. Notas (notas)
+
+   Para qué sirve: Observaciones adicionales del registro. No sustituye campos específicos, resultados clínicos ni motivos de cancelación.
+
+   Obligatorio: No.
+
+   Tipo: Texto de varias líneas. 
+
+   Longitud máxima: 3000 caracteres.
+
+
+
+ESTADO Y CAMPOS ADMINISTRADOS POR EL SISTEMA
+
+
+
+Estado (activo): aparece en el formulario como Activo o Inactivo. Un registro nuevo inicia activo. Desactivarlo evita su selección en nuevas operaciones; no elimina su historial.
+
+ID (id): identificador numérico interno generado automáticamente. No se captura ni equivale al código o expediente.
+
+Versión (version): control automático para detectar si otra persona modificó el registro mientras se editaba. Empieza en 1 e incrementa al guardar cambios.
+
+Creado en (creado_en): fecha y hora de creación, registradas por la base de datos.
+
+Actualizado en (actualizado_en): fecha y hora de la última actualización, registradas por la base de datos.
+
+
+
+REGLAS Y RELACIONES IMPORTANTES
+
+
+
+- Crear una compañía no crea sus precios: los convenios por estudio se agregan en Precios.
+
+- El nombre comercial y la razón social son campos diferentes.
+
+
+
+Permiso de consulta: ver_companias.
+
+Permiso de edición: editar_companias (también requiere el de consulta).
+
+
+
+Documento basado en los campos y validaciones de la versión actual del proyecto.
+
+Fuentes: app/Models/Catalogo.php; app/Migrations/002_catalogos.sql; scripts/instalar.php; app/Services/Solicitud.php; app/Services/Resultado.php; public/assets/js/catalogos.js.
+
